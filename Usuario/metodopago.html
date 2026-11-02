@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D'SEA | Método de Pago</title>
+    
+    <!-- CDN de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        espresso: '#2B211D',
+                        cafeTostado: '#694430',
+                        caramelo: '#B57A50',
+                        mango: '#E29A53',
+                        cremaVainilla: '#FAF4EC',
+                        blancoCalido: '#FFFCF8',
+                        rosaFresa: '#D59B9C',
+                        borderBeige: '#E4D7CA',
+                    },
+                    fontFamily: {
+                        playfair: ['"Playfair Display"', 'serif'],
+                        sans: ['"DM Sans"', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        'xl-custom': '24px',
+                        'lg-custom': '16px',
+                        'md-custom': '12px',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Archivo de Estilos Personalizados -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-rosaFresa selection:text-white bg-cremaVainilla">
+
+    <!-- Encabezado / Barra de Navegación en Blanco Cálido (#FFFCF8) -->
+    <header class="w-full bg-blancoCalido py-4 px-6 md:px-12 border-b border-borderBeige/40 shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            
+            <!-- Enlaces de navegación a la izquierda -->
+            <nav class="flex items-center space-x-6 text-sm font-medium">
+                <a href="inicio.html" class="text-cafeTostado/80 hover:text-espresso font-medium transition-colors">Inicio</a>
+                <a href="menu.html" class="text-cafeTostado/80 hover:text-espresso font-medium transition-colors">Menú</a>
+            </nav>
+
+            <!-- Logo en el centro -->
+            <div class="flex items-center justify-center">
+                <a href="inicio.html" class="flex flex-col items-center focus:outline-none group">
+                    <div class="relative h-12 w-32 sm:w-40 flex items-center justify-center">
+                        <img 
+                            src="logo_dsea.png" 
+                            alt="Logo D'SEA" 
+                            class="max-h-full max-w-full object-contain"
+                            onerror="this.src='logo_dsea';"
+                        />
+                    </div>
+                </a>
+            </div>
+
+            <!-- Botones/Iconos de acción a la derecha -->
+            <div class="flex items-center space-x-4 text-espresso">
+                <!-- Buscador -->
+                <button type="button" class="p-1 hover:opacity-75 transition-opacity" title="Buscar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </button>
+
+                <!-- Icono de Usuario (Perfil/Datos del cliente) -->
+                <a href="datoscliente.html" class="p-1 hover:opacity-75 transition-opacity" title="Mi perfil">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                </a>
+                
+                <!-- Carrito con contador badge -->
+                <a href="carritodecompras.html" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-cremaVainilla border border-borderBeige hover:bg-borderBeige/30 transition-colors" title="Ver carrito">
+                    <svg class="w-4 h-4 text-espresso" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                    </svg>
+                    <span class="text-xs font-semibold">Carrito</span>
+                    <span class="ml-1 px-1.5 py-0.2 bg-espresso text-cremaVainilla rounded-full text-[10px] font-bold">1</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Área de contenido principal -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 md:px-12 py-8 md:py-12">
+        
+        <div class="mb-8">
+            <h1 class="font-playfair text-3xl sm:text-4xl font-bold text-espresso">Método de pago</h1>
+            <p class="text-xs text-cafeTostado/80 mt-1">Elige cómo quieres pagar tu pedido.</p>
+        </div>
+
+        <!-- Layout principal de 2 columnas -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Columna Izquierda: Métodos de Pago (7 cols) -->
+            <div class="lg:col-span-7 space-y-6">
+                
+                <!-- Opción 1: Pago en línea -->
+                <div id="card-pago-linea" onclick="seleccionarMetodo('linea')" class="bg-blancoCalido rounded-xl-custom border-2 border-espresso p-6 sm:p-8 shadow-sm space-y-6 relative cursor-pointer transition-all">
+                    
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2.5 rounded-xl bg-cremaVainilla text-espresso">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h2 class="font-playfair text-xl font-bold text-espresso">Pago en línea</h2>
+                                <p class="text-xs text-cafeTostado/70">Tarjeta de crédito o débito</p>
+                            </div>
+                        </div>
+                        <!-- Radio indicator -->
+                        <div id="radio-linea" class="w-5 h-5 rounded-full border-2 border-espresso flex items-center justify-center">
+                            <div class="w-2.5 h-2.5 rounded-full bg-espresso"></div>
+                        </div>
+                    </div>
+
+                    <!-- Formulario de Tarjeta -->
+                    <div id="form-tarjeta" class="space-y-4 pt-2">
+                        
+                        <!-- Número de tarjeta -->
+                        <div class="space-y-1">
+                            <label class="block text-xs font-semibold text-espresso">Número de tarjeta</label>
+                            <input 
+                                type="text" 
+                                placeholder="0000 0000 0000 0000" 
+                                class="w-full px-4 py-2.5 rounded-xl border border-borderBeige bg-cremaVainilla/30 text-xs text-espresso focus:outline-none focus:border-caramelo transition-colors font-mono tracking-wider"
+                            >
+                        </div>
+
+                        <!-- Fecha y CVC -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <label class="block text-xs font-semibold text-espresso">Fecha de vencimiento</label>
+                                <input 
+                                    type="text" 
+                                    placeholder="MM/AA" 
+                                    class="w-full px-4 py-2.5 rounded-xl border border-borderBeige bg-cremaVainilla/30 text-xs text-espresso focus:outline-none focus:border-caramelo transition-colors text-center font-mono"
+                                >
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block text-xs font-semibold text-espresso">CVC</label>
+                                <input 
+                                    type="text" 
+                                    placeholder="123" 
+                                    maxlength="4"
+                                    class="w-full px-4 py-2.5 rounded-xl border border-borderBeige bg-cremaVainilla/30 text-xs text-espresso focus:outline-none focus:border-caramelo transition-colors text-center font-mono"
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Nombre del titular -->
+                        <div class="space-y-1">
+                            <label class="block text-xs font-semibold text-espresso">Nombre del titular</label>
+                            <input 
+                                type="text" 
+                                value="Ximena Martínez" 
+                                class="w-full px-4 py-2.5 rounded-xl border border-borderBeige bg-cremaVainilla/30 text-xs text-espresso focus:outline-none focus:border-caramelo transition-colors"
+                            >
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Opción 2: Pago al recoger -->
+                <div id="card-pago-recoger" onclick="seleccionarMetodo('recoger')" class="bg-blancoCalido rounded-xl-custom border border-borderBeige/60 p-6 sm:p-8 shadow-sm flex items-center justify-between hover:border-borderBeige transition-all cursor-pointer">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2.5 rounded-xl bg-cremaVainilla text-cafeTostado">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="font-playfair text-xl font-bold text-espresso">Pago al recoger</h2>
+                            <p class="text-xs text-cafeTostado/70">Efectivo o tarjeta en sucursal</p>
+                            <p class="text-[11px] text-cafeTostado/60 mt-1">El cobro se realizará en la tienda al momento de la recolección. No se realizará ningún cargo previo.</p>
+                        </div>
+                    </div>
+                    <!-- Radio indicator -->
+                    <div id="radio-recoger" class="w-5 h-5 rounded-full border-2 border-borderBeige flex-shrink-0 flex items-center justify-center">
+                    </div>
+                </div>
+
+                <!-- Total y Botón de Acción Fijo -->
+                <div class="bg-blancoCalido p-6 rounded-xl-custom border border-borderBeige/50 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <span class="text-xs font-medium text-cafeTostado">Total a cobrar: <strong class="text-espresso font-bold text-sm">$55.00 MXN</strong></span>
+                    <a 
+                        id="btn-confirmar"
+                        href="horariorecoleccion.html" 
+                        class="w-full sm:w-auto px-8 py-3 rounded-xl bg-espresso text-cremaVainilla text-xs font-medium hover:bg-cafeTostado transition-colors shadow-sm inline-block text-center"
+                    >
+                        Confirmar pago de $55.00
+                    </a>
+                </div>
+
+                <p class="text-[11px] text-cafeTostado/70 text-center pt-2">
+                    Al continuar aceptas nuestros términos de servicio.
+                </p>
+
+            </div>
+
+            <!-- Columna Derecha: Resumen del Pedido (5 cols) -->
+            <div class="lg:col-span-5 bg-blancoCalido rounded-xl-custom border border-borderBeige/50 shadow-sm p-6 sm:p-8 space-y-6">
+                
+                <div class="border-b border-borderBeige/60 pb-4">
+                    <span class="text-[11px] font-bold text-mango uppercase tracking-wider">Detalles</span>
+                    <h2 class="font-playfair text-2xl font-bold text-espresso mt-0.5">Pedido #D042</h2>
+                    
+                    <div class="mt-2 space-y-0.5 text-xs text-cafeTostado/80">
+                        <p class="font-semibold text-espresso">Maria Lopez</p>
+                        <p>22 oct 2026 · 15:24</p>
+                    </div>
+                </div>
+
+                <!-- Tarjeta de Tipo de Entrega -->
+                <div class="bg-cremaVainilla/60 rounded-xl p-3.5 border border-borderBeige/50 flex items-start space-x-3 text-xs text-espresso">
+                    <svg class="w-4 h-4 text-mango flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <div>
+                        <p class="font-semibold text-[11px] text-cafeTostado">Recolección en tienda</p>
+                        <p class="text-espresso font-medium">Por elegir después del pago</p>
+                    </div>
+                </div>
+
+                <!-- Lista de Productos -->
+                <div class="space-y-4 pt-2">
+                    <div class="flex items-center justify-between text-xs text-espresso">
+                        <div class="flex items-center space-x-3">
+                            <span class="font-bold text-cafeTostado">1 ×</span>
+                            <span>Marquesita Clásica</span>
+                        </div>
+                        <span class="font-semibold">$55.00</span>
+                    </div>
+                </div>
+
+                <!-- Total -->
+                <div class="pt-4 border-t border-borderBeige/60 flex justify-between items-center text-espresso">
+                    <span class="font-playfair text-lg font-bold">Total · MXN</span>
+                    <span class="font-playfair text-2xl font-bold text-mango">$55.00</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Script para alternar selección entre Pago en línea y Pago al recoger -->
+    <script>
+        function seleccionarMetodo(metodo) {
+            const cardLinea = document.getElementById('card-pago-linea');
+            const cardRecoger = document.getElementById('card-pago-recoger');
+            const radioLinea = document.getElementById('radio-linea');
+            const radioRecoger = document.getElementById('radio-recoger');
+            const formTarjeta = document.getElementById('form-tarjeta');
+            const btnConfirmar = document.getElementById('btn-confirmar');
+
+            if (metodo === 'linea') {
+                // Activar Pago en línea
+                cardLinea.classList.add('border-2', 'border-espresso');
+                cardLinea.classList.remove('border-borderBeige/60');
+                radioLinea.innerHTML = '<div class="w-2.5 h-2.5 rounded-full bg-espresso"></div>';
+                radioLinea.classList.add('border-espresso');
+                radioLinea.classList.remove('border-borderBeige');
+                
+                formTarjeta.classList.remove('hidden');
+
+                // Desactivar Pago al recoger
+                cardRecoger.classList.remove('border-2', 'border-espresso');
+                cardRecoger.classList.add('border', 'border-borderBeige/60');
+                radioRecoger.innerHTML = '';
+                radioRecoger.classList.remove('border-espresso');
+                radioRecoger.classList.add('border-borderBeige');
+
+                btnConfirmar.innerText = 'Confirmar pago de $55.00';
+            } else if (metodo === 'recoger') {
+                // Activar Pago al recoger
+                cardRecoger.classList.add('border-2', 'border-espresso');
+                cardRecoger.classList.remove('border-borderBeige/60');
+                radioRecoger.innerHTML = '<div class="w-2.5 h-2.5 rounded-full bg-espresso"></div>';
+                radioRecoger.classList.add('border-espresso');
+                radioRecoger.classList.remove('border-borderBeige');
+
+                // Desactivar Pago en línea
+                cardLinea.classList.remove('border-2', 'border-espresso');
+                cardLinea.classList.add('border', 'border-borderBeige/60');
+                radioLinea.innerHTML = '';
+                radioLinea.classList.remove('border-espresso');
+                radioLinea.classList.add('border-borderBeige');
+
+                formTarjeta.classList.add('hidden');
+
+                btnConfirmar.innerText = 'Confirmar pedido y pagar al recoger';
+            }
+        }
+    </script>
+
+    <!-- Pie de página -->
+    <footer class="w-full bg-rosaFresa py-8 px-6 md:px-12 mt-auto">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-espresso">
+            
+            <!-- Columna 1: Ubicación -->
+            <div class="space-y-2">
+                <h3 class="font-playfair text-xl font-bold text-espresso">Ubicación</h3>
+                <p class="font-sans text-sm font-medium leading-relaxed opacity-90">
+                    BLVD. Atotonilco 2002,<br>
+                    Brisas del Pedregal, León, Gto. 37295
+                </p>
+            </div>
+
+            <!-- Columna 2: Horario -->
+            <div class="space-y-2 md:text-center">
+                <h3 class="font-playfair text-xl font-bold text-espresso">Horario</h3>
+                <p class="font-sans text-sm font-medium leading-relaxed opacity-90">
+                    Jueves a Domingo<br>
+                    7:30 – 11:00
+                </p>
+            </div>
+
+            <!-- Columna 3: Contáctanos -->
+            <div class="space-y-2 md:text-right">
+                <h3 class="font-playfair text-xl font-bold text-espresso">Contactanos</h3>
+                <p class="font-sans text-sm font-medium leading-relaxed opacity-90">
+                    479 430 00 14
+                </p>
+            </div>
+
+        </div>
+    </footer>
+
+</body>
+</html>

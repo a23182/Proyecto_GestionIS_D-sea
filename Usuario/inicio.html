@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D'SEA | Inicio</title>
+    
+    <!-- CDN de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        espresso: '#2B211D',
+                        cafeTostado: '#694430',
+                        caramelo: '#B57A50',
+                        cremaVainilla: '#FAF4EC',
+                        blancoCalido: '#FFFCF8',
+                        rosaFresa: '#D59B9C',
+                        borderBeige: '#E4D7CA',
+                    },
+                    fontFamily: {
+                        playfair: ['"Playfair Display"', 'serif'],
+                        sans: ['"DM Sans"', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        'xl-custom': '24px',
+                        'lg-custom': '16px',
+                        'md-custom': '12px',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Archivo de Estilos Personalizados -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-rosaFresa selection:text-white bg-cremaVainilla">
+
+    <!-- Encabezado / Barra de Navegación en Blanco Cálido -->
+    <header class="w-full bg-blancoCalido py-4 px-6 md:px-12 border-b border-borderBeige/40 shadow-sm">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            
+            <!-- Enlaces de navegación a la izquierda -->
+            <nav class="flex items-center space-x-6 text-sm font-medium">
+                <div class="relative flex flex-col items-center">
+                    <a href="inicio.html" class="text-espresso font-semibold pb-1 hover:opacity-80 transition-opacity">Inicio</a>
+                    <!-- Línea indicadora de página activa -->
+                    <span class="w-full h-[2.5px] bg-espresso rounded-full"></span>
+                </div>
+                <a href="menu.html" class="text-cafeTostado/80 hover:text-espresso font-medium transition-colors">Menú</a>
+            </nav>
+
+            <!-- Logo en el centro -->
+            <div class="flex items-center justify-center">
+                <a href="inicio.html" class="flex flex-col items-center focus:outline-none group">
+                    <div class="relative h-12 w-32 sm:w-40 flex items-center justify-center">
+                        <img 
+                            src="logo_dsea.png" 
+                            alt="Logo D'SEA" 
+                            class="max-h-full max-w-full object-contain"
+                            onerror="this.src='logo_dsea';"
+                        />
+                    </div>
+                </a>
+            </div>
+
+            <!-- Botones de acción a la derecha -->
+            <div class="flex items-center space-x-3">
+                <a href="iniciosesion.html" class="px-5 py-1.5 rounded-full border border-espresso text-espresso text-sm font-medium hover:bg-espresso hover:text-cremaVainilla transition-all duration-200 inline-block text-center">
+                    Ingresar
+                </a>
+                <a href="registro.html" class="px-5 py-1.5 rounded-full bg-espresso text-cremaVainilla text-sm font-medium hover:bg-cafeTostado transition-all duration-200 shadow-sm inline-block text-center">
+                    Únete
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Área de contenido principal -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 md:px-12 py-8 md:py-12 flex items-center">
+        
+        <!-- Tarjeta principal -->
+        <section class="w-full bg-blancoCalido rounded-xl-custom shadow-sm border border-borderBeige/50 overflow-hidden relative min-h-[420px] md:min-h-[480px] flex flex-col md:flex-row items-stretch">
+            
+            <!-- Sección de texto a la izquierda -->
+            <div class="w-full md:w-1/2 p-8 sm:p-12 md:p-16 flex flex-col justify-center z-20 space-y-3">
+                <h1 class="font-playfair text-3xl sm:text-4xl md:text-5xl font-bold text-espresso leading-tight tracking-tight">
+                    Tu antojo, listo cuando llegues
+                </h1>
+                <p class="font-sans text-lg sm:text-xl font-medium text-caramelo pt-1">
+                    Ordena y elige tu horario
+                </p>
+            </div>
+
+            <!-- Sección de imagen a la derecha -->
+            <div class="w-full md:w-1/2 relative min-h-[300px] md:min-h-full flex items-center justify-center bg-cremaVainilla/20 overflow-hidden">
+                <img 
+                    src="marquesitas" 
+                    alt="Marquesitas D'SEA" 
+                    class="absolute inset-0 w-full h-full object-cover object-center z-0"
+                    onerror="this.src='marquesitas.jpeg';"
+                />
+
+                <!-- Máscara de degradado -->
+                <div class="absolute inset-0 hero-gradient z-10 pointer-events-none"></div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="w-full bg-rosaFresa py-8 px-6 md:px-12 mt-auto">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-espresso">
+            
+            <!-- Columna 1: Ubicación -->
+            <div class="space-y-2">
+                <h3 class="font-playfair text-xl font-bold text-espresso">Ubicación</h3>
+                <p class="font-sans text-sm font-medium leading-relaxed opacity-90">
+                    BLVD. Atotonilco 2002,<br>
+                    Brisas del Pedregal, León, Gto. 37295
+                </p>
+            </div>
+
+            <!-- Columna 2: Horario -->
+            <div class="space-y-2 md:text-center">
+                <h3 class="font-playfair text-xl font-bold text-espresso">Horario</h3>
+                <p class="font-sans text-sm font-medium leading-relaxed opacity-90">
+                    Jueves a Domingo<br>
+                    7:30 – 11:00
+                </p>
+            </div>
+
+            <!-- Columna 3: Contáctanos -->
+            <div class="space-y-2 md:text-right">
+                <h3 class="font-playfair text-xl font-bold text-espresso">Contactanos</h3>
+                <p class="font-sans text-sm font-medium leading-relaxed opacity-90">
+                    479 430 00 14
+                </p>
+            </div>
+
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D'SEA | Gestión de pedidos</title>
+    
+    <!-- CDN de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        espresso: '#2B211D',
+                        cafeTostado: '#694430',
+                        caramelo: '#B57A50',
+                        mango: '#E29A53',
+                        cremaVainilla: '#FAF4EC',
+                        blancoCalido: '#FFFCF8',
+                        rosaFresa: '#D59B9C',
+                        borderBeige: '#E4D7CA',
+                    },
+                    fontFamily: {
+                        playfair: ['"Playfair Display"', 'serif'],
+                        sans: ['"DM Sans"', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        'xl-custom': '24px',
+                        'lg-custom': '16px',
+                        'md-custom': '12px',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Archivo de Estilos Personalizados -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-rosaFresa selection:text-white bg-cremaVainilla">
+
+    <!-- Encabezado / Barra de Navegación del Administrador -->
+    <header class="w-full bg-blancoCalido py-4 px-6 md:px-12 border-b border-borderBeige/40 shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            
+            <!-- Enlaces de navegación a la izquierda / centro -->
+            <div class="flex items-center space-x-10">
+                <!-- Logo -->
+                <a href="dashboardadministrador.html" class="flex flex-col items-center focus:outline-none group">
+                    <div class="relative h-10 w-28 sm:w-32 flex items-center justify-center">
+                        <img 
+                            src="logo_dsea.png" 
+                            alt="Logo D'SEA" 
+                            class="max-h-full max-w-full object-contain"
+                            onerror="this.src='logo_dsea';"
+                        />
+                    </div>
+                </a>
+
+                <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                    <a href="dashboardadministrador.html" class="text-cafeTostado/80 hover:text-espresso transition-colors">Panel operativo</a>
+                    <div class="flex flex-col items-start">
+                        <a href="gestionpedidos.html" class="text-espresso font-semibold transition-colors">Gestión de pedidos</a>
+                        <div class="w-full h-0.5 bg-espresso mt-0.5"></div>
+                    </div>
+                    <a href="administracionmenu.html" class="text-cafeTostado/80 hover:text-espresso transition-colors">Administración del menú</a>
+                    <a href="horario.html" class="text-cafeTostado/80 hover:text-espresso transition-colors">horarios</a>
+                </nav>
+            </div>
+
+            <!-- Botones/Iconos de acción a la derecha -->
+            <div class="flex items-center space-x-4 text-espresso">
+                <!-- Buscador -->
+                <button type="button" class="p-1 hover:opacity-75 transition-opacity" title="Buscar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </button>
+
+                <!-- Notificaciones -->
+                <button type="button" class="p-1 hover:opacity-75 transition-opacity relative" title="Notificaciones">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
+                </button>
+                
+                <!-- Badge contador con número -->
+                <div class="flex items-center justify-center w-6 h-6 rounded-full bg-espresso text-cremaVainilla text-xs font-bold">
+                    2
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Área de contenido principal -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 md:px-12 py-8 md:py-10 space-y-6">
+        
+        <!-- Ficha de bienvenida y filtros -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-borderBeige/50 pb-6">
+            <div class="space-y-1">
+                <p class="text-xs font-semibold text-cafeTostado/80">Jueves 23, Octubre 2026</p>
+                <h1 class="font-playfair text-3xl sm:text-4xl font-bold text-espresso">Buen día, Carla</h1>
+                <p class="font-playfair text-xl font-bold text-espresso pt-1">Pedidos</p>
+            </div>
+
+            <!-- Filtros de pestañas y Buscador -->
+            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div class="flex items-center space-x-6 text-xs font-medium text-cafeTostado">
+                    <div class="relative pb-1">
+                        <span class="text-espresso font-bold">Todos</span>
+                        <div class="absolute bottom-0 left-0 w-full h-0.5 bg-espresso"></div>
+                    </div>
+                    <a href="#" class="hover:text-espresso transition-colors">Recibidos</a>
+                    <a href="#" class="hover:text-espresso transition-colors">Preparados</a>
+                    <a href="#" class="hover:text-espresso transition-colors">Listos</a>
+                </div>
+
+                <!-- Input de búsqueda -->
+                <div class="relative w-full sm:w-64">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-cafeTostado/60">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </span>
+                    <input 
+                        type="text" 
+                        placeholder="Buscar pedido o cliente" 
+                        class="w-full pl-9 pr-4 py-2 rounded-xl border border-borderBeige bg-blancoCalido text-xs text-espresso focus:outline-none focus:border-caramelo transition-colors shadow-sm"
+                    >
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de Gestión de Pedidos -->
+        <div class="bg-blancoCalido rounded-xl-custom border border-borderBeige/60 shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-borderBeige/60 text-xs font-semibold text-espresso bg-cremaVainilla/30">
+                            <th class="py-4 px-6 font-playfair font-bold text-sm">Folio</th>
+                            <th class="py-4 px-6 font-playfair font-bold text-sm">Cliente</th>
+                            <th class="py-4 px-6 font-playfair font-bold text-sm">Horario</th>
+                            <th class="py-4 px-6 font-playfair font-bold text-sm">Total</th>
+                            <th class="py-4 px-6 font-playfair font-bold text-sm">Estado</th>
+                            <th class="py-4 px-6 font-playfair font-bold text-sm text-center">Detalle de pedido</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-borderBeige/40 text-xs text-espresso font-medium">
+                        
+                        <!-- Fila 1: En preparación -->
+                        <tr class="hover:bg-cremaVainilla/20 transition-colors">
+                            <td class="py-4 px-6 font-semibold">#D001</td>
+                            <td class="py-4 px-6">María López</td>
+                            <td class="py-4 px-6 text-cafeTostado/80">10:45</td>
+                            <td class="py-4 px-6 font-semibold">$65.00</td>
+                            <td class="py-4 px-6">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full bg-[#FAF3EC] text-[#8C6239] text-[11px] font-semibold space-x-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#8C6239]"></span>
+                                    <span>En preparación</span>
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <a href="detallepedidoadmin.html" class="inline-flex items-center justify-center w-9 h-7 rounded-lg bg-espresso text-cremaVainilla hover:bg-cafeTostado transition-colors shadow-sm">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+
+                        <!-- Fila 2: Recibido -->
+                        <tr class="hover:bg-cremaVainilla/20 transition-colors">
+                            <td class="py-4 px-6 font-semibold">#D002</td>
+                            <td class="py-4 px-6">Carlos Ruiz</td>
+                            <td class="py-4 px-6 text-cafeTostado/80">10:30</td>
+                            <td class="py-4 px-6 font-semibold">$98.00</td>
+                            <td class="py-4 px-6">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full bg-[#FCEBEA] text-[#B85C54] text-[11px] font-semibold space-x-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#B85C54]"></span>
+                                    <span>Recibido</span>
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <a href="detallepedidoadmin.html" class="inline-flex items-center justify-center w-9 h-7 rounded-lg bg-espresso text-cremaVainilla hover:bg-cafeTostado transition-colors shadow-sm">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+
+                        <!-- Fila 3: Listos -->
+                        <tr class="hover:bg-cremaVainilla/20 transition-colors">
+                            <td class="py-4 px-6 font-semibold">#D003</td>
+                            <td class="py-4 px-6">María Pérez</td>
+                            <td class="py-4 px-6 text-cafeTostado/80">09:45</td>
+                            <td class="py-4 px-6 font-semibold">$210.00</td>
+                            <td class="py-4 px-6">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full bg-[#F3EFEA] text-[#694430] text-[11px] font-semibold space-x-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#694430]"></span>
+                                    <span>Listos</span>
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <a href="detallepedidoadmin.html" class="inline-flex items-center justify-center w-9 h-7 rounded-lg bg-espresso text-cremaVainilla hover:bg-cafeTostado transition-colors shadow-sm">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+
+                        <!-- Fila 4: Entregado -->
+                        <tr class="hover:bg-cremaVainilla/20 transition-colors">
+                            <td class="py-4 px-6 font-semibold">#D004</td>
+                            <td class="py-4 px-6">Jorge Díaz</td>
+                            <td class="py-4 px-6 text-cafeTostado/80">10:15</td>
+                            <td class="py-4 px-6 font-semibold">$64.00</td>
+                            <td class="py-4 px-6">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full bg-[#EBF4EC] text-[#4A7C59] text-[11px] font-semibold space-x-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#4A7C59]"></span>
+                                    <span>Entregado</span>
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <a href="detallepedidoadmin.html" class="inline-flex items-center justify-center w-9 h-7 rounded-lg bg-espresso text-cremaVainilla hover:bg-cafeTostado transition-colors shadow-sm">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+
+                        <!-- Fila 5: Listos -->
+                        <tr class="hover:bg-cremaVainilla/20 transition-colors">
+                            <td class="py-4 px-6 font-semibold">#D005</td>
+                            <td class="py-4 px-6">Lucía Gómez</td>
+                            <td class="py-4 px-6 text-cafeTostado/80">10:30</td>
+                            <td class="py-4 px-6 font-semibold">$132.00</td>
+                            <td class="py-4 px-6">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full bg-[#F3EFEA] text-[#694430] text-[11px] font-semibold space-x-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#694430]"></span>
+                                    <span>Listos</span>
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <a href="detallepedidoadmin.html" class="inline-flex items-center justify-center w-9 h-7 rounded-lg bg-espresso text-cremaVainilla hover:bg-cafeTostado transition-colors shadow-sm">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+
+                        <!-- Fila 6: En preparación -->
+                        <tr class="hover:bg-cremaVainilla/20 transition-colors">
+                            <td class="py-4 px-6 font-semibold">#D006</td>
+                            <td class="py-4 px-6">Pedro Sánchez</td>
+                            <td class="py-4 px-6 text-cafeTostado/80">10:00</td>
+                            <td class="py-4 px-6 font-semibold">$75.00</td>
+                            <td class="py-4 px-6">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full bg-[#FAF3EC] text-[#8C6239] text-[11px] font-semibold space-x-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#8C6239]"></span>
+                                    <span>En preparación</span>
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <a href="detallepedidoadmin.html" class="inline-flex items-center justify-center w-9 h-7 rounded-lg bg-espresso text-cremaVainilla hover:bg-cafeTostado transition-colors shadow-sm">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+
+                        <!-- Fila 7: Entregado -->
+                        <tr class="hover:bg-cremaVainilla/20 transition-colors">
+                            <td class="py-4 px-6 font-semibold">#D007</td>
+                            <td class="py-4 px-6">Carlos Medina</td>
+                            <td class="py-4 px-6 text-cafeTostado/80">09:30</td>
+                            <td class="py-4 px-6 font-semibold">$88.00</td>
+                            <td class="py-4 px-6">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full bg-[#EBF4EC] text-[#4A7C59] text-[11px] font-semibold space-x-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#4A7C59]"></span>
+                                    <span>Entregado</span>
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <a href="detallepedidoadmin.html" class="inline-flex items-center justify-center w-9 h-7 rounded-lg bg-espresso text-cremaVainilla hover:bg-cafeTostado transition-colors shadow-sm">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+
+                        <!-- Fila 8: Entregado -->
+                        <tr class="hover:bg-cremaVainilla/20 transition-colors">
+                            <td class="py-4 px-6 font-semibold">#D007</td>
+                            <td class="py-4 px-6">Sofía Torres</td>
+                            <td class="py-4 px-6 text-cafeTostado/80">10:35</td>
+                            <td class="py-4 px-6 font-semibold">$120.00</td>
+                            <td class="py-4 px-6">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full bg-[#EBF4EC] text-[#4A7C59] text-[11px] font-semibold space-x-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#4A7C59]"></span>
+                                    <span>Entregado</span>
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <a href="detallepedidoadmin.html" class="inline-flex items-center justify-center w-9 h-7 rounded-lg bg-espresso text-cremaVainilla hover:bg-cafeTostado transition-colors shadow-sm">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+
+                        <!-- Fila 9: Entregado -->
+                        <tr class="hover:bg-cremaVainilla/20 transition-colors">
+                            <td class="py-4 px-6 font-semibold">#D007</td>
+                            <td class="py-4 px-6">Diego Medina</td>
+                            <td class="py-4 px-6 text-cafeTostado/80">09:40</td>
+                            <td class="py-4 px-6 font-semibold">$95.00</td>
+                            <td class="py-4 px-6">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full bg-[#EBF4EC] text-[#4A7C59] text-[11px] font-semibold space-x-2">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#4A7C59]"></span>
+                                    <span>Entregado</span>
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <a href="detallepedidoadmin.html" class="inline-flex items-center justify-center w-9 h-7 rounded-lg bg-espresso text-cremaVainilla hover:bg-cafeTostado transition-colors shadow-sm">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+</body>
+</html>

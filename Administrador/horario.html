@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D'SEA | Horarios y Disponibilidad</title>
+    
+    <!-- CDN de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        espresso: '#2B211D',
+                        cafeTostado: '#694430',
+                        caramelo: '#B57A50',
+                        mango: '#E29A53',
+                        cremaVainilla: '#FAF4EC',
+                        blancoCalido: '#FFFCF8',
+                        rosaFresa: '#D59B9C',
+                        borderBeige: '#E4D7CA',
+                    },
+                    fontFamily: {
+                        playfair: ['"Playfair Display"', 'serif'],
+                        sans: ['"DM Sans"', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        'xl-custom': '24px',
+                        'lg-custom': '16px',
+                        'md-custom': '12px',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Archivo de Estilos Personalizados -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-rosaFresa selection:text-white bg-cremaVainilla">
+
+    <!-- Encabezado / Barra de Navegación del Administrador -->
+    <header class="w-full bg-blancoCalido py-4 px-6 md:px-12 border-b border-borderBeige/40 shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            
+            <!-- Enlaces de navegación a la izquierda / centro -->
+            <div class="flex items-center space-x-10">
+                <!-- Logo -->
+                <a href="dashboardadministrador.html" class="flex flex-col items-center focus:outline-none group">
+                    <div class="relative h-10 w-28 sm:w-32 flex items-center justify-center">
+                        <img 
+                            src="logo_dsea.png" 
+                            alt="Logo D'SEA" 
+                            class="max-h-full max-w-full object-contain"
+                            onerror="this.src='logo_dsea';"
+                        />
+                    </div>
+                </a>
+
+                <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                    <a href="dashboardadministrador.html" class="text-cafeTostado/80 hover:text-espresso transition-colors">Panel operativo</a>
+                    <a href="gestionpedidos.html" class="text-cafeTostado/80 hover:text-espresso transition-colors">Gestión de pedidos</a>
+                    <a href="administracionmenu.html" class="text-cafeTostado/80 hover:text-espresso transition-colors">Administración del menú</a>
+                    <div class="flex flex-col items-start">
+                        <a href="horario.html" class="text-espresso font-semibold transition-colors">horarios</a>
+                        <div class="w-full h-0.5 bg-espresso mt-0.5"></div>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Botones/Iconos de acción a la derecha -->
+            <div class="flex items-center space-x-4 text-espresso">
+                <!-- Buscador -->
+                <button type="button" class="p-1 hover:opacity-75 transition-opacity" title="Buscar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </button>
+
+                <!-- Notificaciones -->
+                <button type="button" class="p-1 hover:opacity-75 transition-opacity relative" title="Notificaciones">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
+                </button>
+                
+                <!-- Badge contador con número -->
+                <div class="flex items-center justify-center w-6 h-6 rounded-full bg-espresso text-cremaVainilla text-xs font-bold">
+                    2
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Área de contenido principal -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 md:px-12 py-8 md:py-10 space-y-8">
+        
+        <!-- Ficha superior: Saludo y Botón Guardar Cambios -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="space-y-1">
+                <p class="text-xs font-semibold text-cafeTostado/80">Jueves 23, Octubre 2026</p>
+                <h1 class="font-playfair text-3xl sm:text-4xl font-bold text-espresso">Buen día, Carla</h1>
+                <p class="text-xs text-cafeTostado/80 font-medium">Define cuándo pueden recoger sus pedidos tus clientes.</p>
+            </div>
+
+            <button type="button" onclick="guardarCambios()" class="px-6 py-3 rounded-xl bg-espresso text-cremaVainilla text-xs font-medium hover:bg-cafeTostado transition-colors shadow-sm flex items-center space-x-2">
+                <span>Guardar cambios</span>
+            </button>
+        </div>
+
+        <!-- Layout de 3 Columnas Dinámicas -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- Columna 1: Horario de servicio (4 cols) -->
+            <div class="lg:col-span-4 bg-blancoCalido rounded-xl-custom border border-borderBeige/60 shadow-sm p-6 space-y-6">
+                
+                <div>
+                    <h2 class="font-playfair text-2xl font-bold text-espresso">Horario de servicio</h2>
+                    <p class="text-[11px] text-cafeTostado/70 mt-1">Activa los días y define la apertura y cierre.</p>
+                </div>
+
+                <!-- Lista de días interactivos -->
+                <div class="space-y-4" id="lista-dias">
+                    
+                    <!-- Plantilla de día generada por JS o estática controlada -->
+                    <!-- Lunes -->
+                    <div class="flex items-center justify-between pb-3 border-b border-borderBeige/40 dia-row" data-dia="lunes">
+                        <div class="flex items-center space-x-3">
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked onchange="toggleDia(this)" class="sr-only peer">
+                                <div class="w-9 h-5 bg-borderBeige peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-borderBeige after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-espresso"></div>
+                            </label>
+                            <span class="text-xs font-semibold text-espresso w-16">Lunes</span>
+                        </div>
+                        <div class="flex items-center space-x-1.5 inputs-horas">
+                            <div class="relative">
+                                <input type="text" value="08:00 am" class="w-20 px-2 py-1 text-[11px] rounded-lg border border-borderBeige bg-cremaVainilla/30 text-espresso text-center font-medium focus:outline-none focus:border-caramelo">
+                            </div>
+                            <span class="text-[11px] text-cafeTostado">a</span>
+                            <div class="relative">
+                                <input type="text" value="08:00 pm" class="w-20 px-2 py-1 text-[11px] rounded-lg border border-borderBeige bg-cremaVainilla/30 text-espresso text-center font-medium focus:outline-none focus:border-caramelo">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Martes -->
+                    <div class="flex items-center justify-between pb-3 border-b border-borderBeige/40 dia-row" data-dia="martes">
+                        <div class="flex items-center space-x-3">
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" onchange="toggleDia(this)" class="sr-only peer">
+                                <div class="w-9 h-5 bg-borderBeige peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-borderBeige after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-espresso"></div>
+                            </label>
+                            <span class="text-xs font-semibold text-espresso w-16">Martes</span>
+                        </div>
+                        <div class="flex items-center space-x-1.5 inputs-horas opacity-40 pointer-events-none">
+                            <input type="text" value="08:00 am" class="w-20 px-2 py-1 text-[11px] rounded-lg border border-borderBeige bg-cremaVainilla/30 text-espresso text-center font-medium">
+                            <span class="text-[11px] text-cafeTostado">a</span>
+                            <input type="text" value="08:00 pm" class="w-20 px-2 py-1 text-[11px] rounded-lg border border-borderBeige bg-cremaVainilla/30 text-espresso text-center font-medium">
+                        </div>
+                    </div>
+
+                    <!-- Miércoles -->
+                    <div class="flex items-center justify-between pb-3 border-b border-borderBeige/40 dia-row" data-dia="miercoles">
+                        <div class="flex items-center space-x-3">
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked onchange="toggleDia(this)" class="sr-only peer">
+                                <div class="w-9 h-5 bg-borderBeige peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-borderBeige after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-espresso"></div>
+                            </label>
+                            <span class="text-xs font-semibold text-espresso w-16">Miércoles</span>
+                        </div>
+                        <div class="flex items-center space-x-1.5 inputs-horas">
+                            <input type="text" value="08:00 am" class="w-20 px-2 py-1 text-[11px] rounded-lg border border-borderBeige bg-cremaVainilla/30 text-espresso text-center font-medium focus:outline-none focus:border-caramelo">
+                            <span class="text-[11px] text-cafeTostado">a</span>
+                            <input type="text" value="08:00 pm" class="w-20 px-2 py-1 text-[11px] rounded-lg border border-borderBeige bg-cremaVainilla/30 text-espresso text-center font-medium focus:outline-none focus:border-caramelo">
+                        </div>
+                    </div>
+
+                    <!-- Jueves -->
+                    <div class="flex items-center justify-between pb-3 border-b border-borderBeige/40 dia-row" data-dia="jueves">
+                        <div class="flex items-center space-x-3">
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked onchange="toggleDia(this)" class="sr-only peer">
+                                <div class="w-9 h-5 bg-borderBeige peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-borderBeige after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-espresso"></div>
+                            </label>
+                            <span class="text-xs font-semibold text-espresso w-16">Jueves</span>
+                        </div>
+                        <div class="flex items-center space-x-1.5 inputs-horas">
+                            <input type="text" value="08:00 am" class="w-20 px-2 py-1 text-[11px] rounded-lg border border-borderBeige bg-cremaVainilla/30 text-espresso text-center font-medium focus:outline-none focus:border-caramelo">
+                            <span class="text-[11px] text-cafeTostado">a</span>
+                            <input type="text" value="08:00 pm" class="w-20 px-2 py-1 text-[11px] rounded-lg border border-borderBeige bg-cremaVainilla/30 text-espresso text-center font-medium focus:outline-none focus:border-caramelo">
+                        </div>
+                    </div>
+
+                    <!-- Viernes -->
+                    <div class="flex items-center justify-between pb-3 border-b border-borderBeige/40 dia-row" data-dia="viernes">
+                        <div class="flex items-center space-x-3">
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked onchange="toggleDia(this)" class="sr-only peer">
+                                <div class="w-9 h-5 bg-borderBeige peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-borderBeige after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-espresso"></div>
+                            </label>
+                            <span class="text-xs font-semibold text-espresso w-16">Viernes</span>
+                        </div>
+                        <div class="flex items-center space-x-1.5 inputs-horas">
+                            <input type="text" value="08:00 am" class="w-20 px-2 py-1 text-[11px] rounded-lg border border-borderBeige bg-cremaVainilla/30 text-espresso text-center font-medium focus:outline-none focus:border-caramelo">
+                            <span class="text-[11px] text-cafeTostado">a</span>
+                            <input type="text" value="08:00 pm" class="w-20 px-2 py-1 text-[11px] rounded-lg border border-borderBeige bg-cremaVainilla/30 text-espresso text-center font-medium focus:outline-none focus:border-caramelo">
+                        </div>
+                    </div>
+
+                    <!-- Sábado -->
+                    <div class="flex items-center justify-between pb-3 border-b border-borderBeige/40 dia-row" data-dia="sabado">
+                        <div class="flex items-center space-x-3">
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" onchange="toggleDia(this)" class="sr-only peer">
+                                <div class="w-9 h-5 bg-borderBeige peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-borderBeige after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-espresso"></div>
+                            </label>
+                            <span class="text-xs font-semibold text-espresso w-16">Sábado</span>
+                        </div>
+                        <div class="flex items-center space-x-1.5 inputs-horas opacity-40 pointer-events-none">
+                            <input type="text" value="08:00 am" class="w-20 px-2 py-1 text-[11px] rounded-lg border border-borderBeige bg-cremaVainilla/30 text-espresso text-center font-medium">
+                            <span class="text-[11px] text-cafeTostado">a</span>
+                            <input type="text" value="08:00 pm" class="w-20 px-2 py-1 text-[11px] rounded-lg border border-borderBeige bg-cremaVainilla/30 text-espresso text-center font-medium">
+                        </div>
+                    </div>
+
+                    <!-- Domingo -->
+                    <div class="flex items-center justify-between dia-row" data-dia="domingo">
+                        <div class="flex items-center space-x-3">
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" onchange="toggleDia(this)" class="sr-only peer">
+                                <div class="w-9 h-5 bg-borderBeige peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-borderBeige after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-espresso"></div>
+                            </label>
+                            <span class="text-xs font-semibold text-espresso w-16">Domingo</span>
+                        </div>
+                        <div class="flex items-center space-x-1.5 inputs-horas opacity-40 pointer-events-none">
+                            <input type="text" value="08:00 am" class="w-20 px-2 py-1 text-[11px] rounded-lg border border-borderBeige bg-cremaVainilla/30 text-espresso text-center font-medium">
+                            <span class="text-[11px] text-cafeTostado">a</span>
+                            <input type="text" value="08:00 pm" class="w-20 px-2 py-1 text-[11px] rounded-lg border border-borderBeige bg-cremaVainilla/30 text-espresso text-center font-medium">
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Columna 2: Disponibilidad de recolección (4 cols) -->
+            <div class="lg:col-span-4 bg-blancoCalido rounded-xl-custom border border-borderBeige/60 shadow-sm p-6 space-y-6">
+                
+                <div>
+                    <h2 class="font-playfair text-2xl font-bold text-espresso">Disponibilidad de recolección</h2>
+                    <p class="text-[11px] text-cafeTostado/70 mt-1">Configura la disponibilidad de cada intervalo.</p>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Duración de cada bloque (Select) -->
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-espresso">Duración de cada bloque</label>
+                        <select class="w-full px-4 py-2.5 rounded-xl border border-borderBeige bg-cremaVainilla/30 text-xs text-espresso focus:outline-none focus:border-caramelo transition-colors">
+                            <option>15 minutos</option>
+                            <option>30 minutos</option>
+                            <option>60 minutos</option>
+                        </select>
+                    </div>
+
+                    <!-- Contador dinámico de bloques -->
+                    <div class="space-y-1.5 pt-2">
+                        <label class="block text-xs font-bold text-espresso">Bloques por hora / Capacidad</label>
+                        <div class="flex items-center justify-between border border-borderBeige rounded-xl p-1 bg-cremaVainilla/30">
+                            <button type="button" onclick="cambiarCantidad(-1)" class="w-10 h-9 rounded-lg bg-white border border-borderBeige text-espresso font-bold hover:bg-cremaVainilla transition-colors flex items-center justify-center">-</button>
+                            <input type="text" id="input-bloques" value="8" readonly class="w-16 text-center text-xs font-bold text-espresso bg-transparent border-none focus:outline-none">
+                            <button type="button" onclick="cambiarCantidad(1)" class="w-10 h-9 rounded-lg bg-white border border-borderBeige text-espresso font-bold hover:bg-cremaVainilla transition-colors flex items-center justify-center">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Capacidad estimada dinámica -->
+                    <div class="bg-cremaVainilla/60 rounded-xl p-4 border border-borderBeige/60 flex items-center justify-between pt-4">
+                        <div>
+                            <p class="text-[10px] font-bold text-cafeTostado uppercase tracking-wider">Capacidad estimada</p>
+                            <p class="text-xs font-bold text-espresso mt-0.5"><span id="capacidad-texto">32</span> pedidos disponibles por hora</p>
+                        </div>
+                        <div class="p-2.5 rounded-xl bg-white border border-borderBeige text-espresso shadow-sm">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Columna 3: ¿Necesitas bloquear una fecha? (4 cols) -->
+            <div class="lg:col-span-4 bg-blancoCalido rounded-xl-custom border border-borderBeige/60 shadow-sm p-6 space-y-6">
+                
+                <div class="flex items-start justify-between">
+                    <div>
+                        <h2 class="font-playfair text-xl font-bold text-espresso">¿Necesitas bloquear una fecha?</h2>
+                        <p class="text-[11px] text-cafeTostado/70 mt-1">Puedes cerrar días festivos o periodos especiales sin cambiar tu horario habitual.</p>
+                    </div>
+                    <svg class="w-6 h-6 text-espresso flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+
+                <!-- Calendario Interactivo Dinámico -->
+                <div class="space-y-4 pt-2">
+                    
+                    <!-- Selectores de Mes y Año -->
+                    <div class="flex items-center justify-between text-xs font-bold text-espresso">
+                        <div class="flex items-center space-x-1 bg-cremaVainilla/60 px-3 py-1.5 rounded-lg border border-borderBeige">
+                            <span>Mayo</span>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </div>
+                        <div class="flex items-center space-x-1 bg-cremaVainilla/60 px-3 py-1.5 rounded-lg border border-borderBeige">
+                            <span>2020</span>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </div>
+                    </div>
+
+                    <!-- Días de la semana -->
+                    <div class="grid grid-cols-7 text-center text-[11px] font-bold text-cafeTostado/70">
+                        <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+                    </div>
+
+                    <!-- Cuadrícula de días interactiva -->
+                    <div class="grid grid-cols-7 gap-y-2 text-center text-xs font-medium text-espresso" id="calendario-grid">
+                        <!-- Generados dinámicamente o estructurados para click -->
+                        <span class="text-cafeTostado/40 py-1">27</span><span class="text-cafeTostado/40 py-1">28</span><span class="text-cafeTostado/40 py-1">29</span><span class="text-cafeTostado/40 py-1">30</span>
+                        
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">1</button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">2</button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">3</button>
+
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">4</button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">5</button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">6</button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">7</button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">8</button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">9</button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">10</button>
+
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">11</button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">12</button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">13</button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">14</button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">15</button>
+                        
+                        <!-- Fechas especiales bloqueadas de ejemplo (Rojas con puntito) -->
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full bg-rosaFresa text-white font-bold relative flex flex-col items-center justify-center fecha-bloqueada">
+                            <span>16</span>
+                            <span class="w-1 h-1 bg-white rounded-full absolute bottom-0.5"></span>
+                        </button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full bg-rosaFresa text-white font-bold relative flex flex-col items-center justify-center fecha-bloqueada">
+                            <span>17</span>
+                            <span class="w-1 h-1 bg-white rounded-full absolute bottom-0.5"></span>
+                        </button>
+
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full bg-rosaFresa text-white font-bold relative flex flex-col items-center justify-center fecha-bloqueada">
+                            <span>18</span>
+                            <span class="w-1 h-1 bg-white rounded-full absolute bottom-0.5"></span>
+                        </button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full bg-rosaFresa text-white font-bold relative flex flex-col items-center justify-center fecha-bloqueada">
+                            <span>19</span>
+                            <span class="w-1 h-1 bg-white rounded-full absolute bottom-0.5"></span>
+                        </button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full bg-rosaFresa text-white font-bold relative flex flex-col items-center justify-center fecha-bloqueada">
+                            <span>20</span>
+                            <span class="w-1 h-1 bg-white rounded-full absolute bottom-0.5"></span>
+                        </button>
+                        <!-- Fecha seleccionada principal con borde/círculo -->
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full bg-espresso text-cremaVainilla font-bold">21</button>
+
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">22</button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">23</button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">24</button>
+
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">25</button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">26</button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">27</button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">28</button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">29</button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">30</button>
+                        <button type="button" onclick="toggleFechaBloqueada(this)" class="py-1 rounded-full hover:bg-cremaVainilla transition-colors">31</button>
+                    </div>
+
+                    <!-- Botones de Acción inferior calendario -->
+                    <div class="flex items-center space-x-3 pt-2">
+                        <button type="button" onclick="limpiarBloqueos()" class="w-1/2 py-2 rounded-xl border border-borderBeige bg-white text-xs font-medium text-espresso hover:bg-cremaVainilla/50 transition-colors text-center shadow-sm">
+                            Back
+                        </button>
+                        <button type="button" onclick="aplicarBloqueos()" class="w-1/2 py-2 rounded-xl bg-espresso text-cremaVainilla text-xs font-medium hover:bg-cafeTostado transition-colors text-center shadow-sm">
+                            Apply
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Script de Interactividad Dinámica -->
+    <script>
+        // 1. Activar / Desactivar días de servicio
+        function toggleDia(checkbox) {
+            const row = checkbox.closest('.dia-row');
+            const inputsContainer = row.querySelector('.inputs-horas');
+            
+            if (checkbox.checked) {
+                inputsContainer.classList.remove('opacity-40', 'pointer-events-none');
+            } else {
+                inputsContainer.classList.add('opacity-40', 'pointer-events-none');
+            }
+        }
+
+        // 2. Control de bloques y capacidad estimada
+        function cambiarCantidad(cambio) {
+            const input = document.getElementById('input-bloques');
+            let valorActual = parseInt(input.value) || 0;
+            valorActual += cambio;
+            
+            if (valorActual < 1) valorActual = 1;
+            if (valorActual > 50) valorActual = 50;
+            
+            input.value = valorActual;
+            
+            // Actualizar capacidad estimada dinámicamente (ej. 4 pedidos por bloque de 15 min = valor * 4)
+            const capacidadTexto = document.getElementById('capacidad-texto');
+            capacidadTexto.innerText = valorActual * 4;
+        }
+
+        // 3. Bloquear / Desbloquear fechas al hacer clic en el calendario
+        function toggleFechaBloqueada(btn) {
+            if (btn.classList.contains('bg-rosaFresa')) {
+                btn.classList.remove('bg-rosaFresa', 'text-white', 'font-bold', 'fecha-bloqueada');
+                btn.classList.add('hover:bg-crecalVainilla');
+                const dot = btn.querySelector('span:nth-child(2)');
+                if (dot) dot.remove();
+            } else {
+                btn.className = 'py-1 rounded-full bg-rosaFresa text-white font-bold relative flex flex-col items-center justify-center fecha-bloqueada';
+                if (!btn.querySelector('.w-1')) {
+                    const dot = document.createElement('span');
+                    dot.className = 'w-1 h-1 bg-white rounded-full absolute bottom-0.5';
+                    btn.appendChild(dot);
+                }
+            }
+        }
+
+        function limpiarBloqueos() {
+            const fechas = document.querySelectorAll('#calendario-grid button');
+            fechas.forEach(f => {
+                f.classList.remove('bg-rosaFresa', 'text-white', 'font-bold', 'fecha-bloqueada');
+                const dot = f.querySelector('.w-1');
+                if (dot) dot.remove();
+            });
+            alert("Se han limpiado las fechas seleccionadas.");
+        }
+
+        function aplicarBloqueos() {
+            alert("¡Fechas especiales bloqueadas correctamente con éxito!");
+        }
+
+        // 4. Guardar cambios general
+        function guardarCambios() {
+            alert("¡Los cambios en horarios, bloques y fechas especiales se han guardado correctamente!");
+        }
+    </script>
+
+</body>
+</html>

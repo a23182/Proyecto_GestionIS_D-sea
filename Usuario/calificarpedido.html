@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D'SEA | Calificar Pedido</title>
+    
+    <!-- CDN de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        espresso: '#2B211D',
+                        cafeTostado: '#694430',
+                        caramelo: '#B57A50',
+                        mango: '#E29A53',
+                        cremaVainilla: '#FAF4EC',
+                        blancoCalido: '#FFFCF8',
+                        rosaFresa: '#D59B9C',
+                        borderBeige: '#E4D7CA',
+                        verdeMatcha: '#607254',
+                        verdeMatchaClaro: '#EAF0E6',
+                        estrellaActiva: '#E5A93B',
+                    },
+                    fontFamily: {
+                        playfair: ['"Playfair Display"', 'serif'],
+                        sans: ['"DM Sans"', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        'xl-custom': '24px',
+                        'lg-custom': '16px',
+                        'md-custom': '12px',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Archivo de Estilos Personalizados -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-rosaFresa selection:text-white bg-cremaVainilla">
+
+    <!-- Encabezado / Barra de Navegación en Blanco Cálido (#FFFCF8) -->
+    <header class="w-full bg-blancoCalido py-4 px-6 md:px-12 border-b border-borderBeige/40 shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            
+            <!-- Enlaces de navegación a la izquierda -->
+            <nav class="flex items-center space-x-6 text-sm font-medium">
+                <a href="inicio.html" class="text-cafeTostado/80 hover:text-espresso font-medium transition-colors">Inicio</a>
+                <a href="menu.html" class="text-cafeTostado/80 hover:text-espresso font-medium transition-colors">Menú</a>
+            </nav>
+
+            <!-- Logo en el centro -->
+            <div class="flex items-center justify-center">
+                <a href="inicio.html" class="flex flex-col items-center focus:outline-none group">
+                    <div class="relative h-12 w-32 sm:w-40 flex items-center justify-center">
+                        <img 
+                            src="logo_dsea.png" 
+                            alt="Logo D'SEA" 
+                            class="max-h-full max-w-full object-contain"
+                            onerror="this.src='logo_dsea';"
+                        />
+                    </div>
+                </a>
+            </div>
+
+            <!-- Botones/Iconos de acción a la derecha -->
+            <div class="flex items-center space-x-4 text-espresso">
+                <!-- Buscador -->
+                <button type="button" class="p-1 hover:opacity-75 transition-opacity" title="Buscar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </button>
+
+                <!-- Icono de Usuario (Perfil/Datos del cliente) -->
+                <a href="datoscliente.html" class="p-1 hover:opacity-75 transition-opacity" title="Mi perfil">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                </a>
+                
+                <!-- Carrito con contador badge -->
+                <a href="carritodecompras.html" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-cremaVainilla border border-borderBeige hover:bg-borderBeige/30 transition-colors" title="Ver carrito">
+                    <svg class="w-4 h-4 text-espresso" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                    </svg>
+                    <span class="text-xs font-semibold">Carrito</span>
+                    <span class="ml-1 px-1.5 py-0.2 bg-espresso text-cremaVainilla rounded-full text-[10px] font-bold">1</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Área de contenido principal -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 md:px-12 py-8 md:py-12">
+
+        <!-- Título principal -->
+        <div class="mb-8">
+            <span class="text-xs font-medium text-cafeTostado/80 uppercase tracking-wider">Tu experiencia en D'SEA</span>
+            <h1 class="font-playfair text-3xl sm:text-4xl font-bold text-espresso mt-0.5">
+                Calificar pedido
+            </h1>
+            <p class="text-xs sm:text-sm text-cafeTostado font-medium mt-1">
+                María, nos encantará saber cómo estuvo tu pedido.
+            </p>
+        </div>
+
+        <!-- Layout principal de 2 columnas -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Columna Izquierda: Formulario de Calificación (7 cols) -->
+            <div class="lg:col-span-7 bg-blancoCalido rounded-xl-custom border border-borderBeige/60 shadow-sm p-6 sm:p-8 space-y-6">
+                
+                <div class="space-y-1">
+                    <h2 class="font-playfair text-xl font-bold text-espresso">¿Cómo fue tu experiencia?</h2>
+                    <p class="text-xs text-cafeTostado/80">Elige de 1 a 5 estrellas: 1 es la menor y 5 la mayor valoración.</p>
+                </div>
+
+                <!-- Selección de Estrellas (4 activas, 1 inactiva) -->
+                <div class="space-y-2">
+                    <div class="flex items-center space-x-2">
+                        <!-- Estrellas 1 a 4 (Rellenas) -->
+                        <button type="button" class="text-estrellaActiva focus:outline-none transition-transform hover:scale-110">
+                            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        </button>
+                        <button type="button" class="text-estrellaActiva focus:outline-none transition-transform hover:scale-110">
+                            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        </button>
+                        <button type="button" class="text-estrellaActiva focus:outline-none transition-transform hover:scale-110">
+                            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        </button>
+                        <button type="button" class="text-estrellaActiva focus:outline-none transition-transform hover:scale-110">
+                            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        </button>
+                        <!-- Estrella 5 (Vacía / Contorno) -->
+                        <button type="button" class="text-borderBeige hover:text-estrellaActiva focus:outline-none transition-transform hover:scale-110">
+                            <svg class="w-8 h-8 fill-none stroke-current stroke-[1.5]" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        </button>
+                    </div>
+                    
+                    <p class="text-xs font-semibold text-espresso">4 de 5 estrellas · Muy buena</p>
+                </div>
+
+                <!-- Campo de Comentario -->
+                <div class="space-y-1.5 pt-2">
+                    <label for="comentario" class="block text-xs font-medium text-cafeTostado">Comentario (opcional)</label>
+                    <textarea 
+                        id="comentario" 
+                        rows="3" 
+                        class="w-full rounded-xl border border-borderBeige/80 bg-blancoCalido p-3 text-xs text-espresso placeholder-cafeTostado/50 focus:outline-none focus:border-espresso transition-colors resize-none"
+                        placeholder="¡Muy rica la marquesita! Gracias por la atención."
+                    >¡Muy rica la marquesita! Gracias por la atención.</textarea>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="pt-2 flex flex-col sm:flex-row items-center gap-3">
+                    <a 
+                        href="calificacionenviada.html" 
+                        class="w-full sm:w-1/2 py-3 rounded-xl bg-espresso text-cremaVainilla text-xs font-medium hover:bg-cafeTostado transition-colors text-center shadow-sm"
+                    >
+                        Enviar calificación
+                    </a>
+                    <a 
+                        href="menu.html" 
+                        class="w-full sm:w-1/2 py-3 rounded-xl border border-borderBeige text-espresso text-xs font-medium hover:bg-cremaVainilla transition-colors text-center"
+                    >
+                        Omitir por ahora
+                    </a>
+                </div>
+
+                <!-- Alerta informativa inferior -->
+                <div class="bg-cremaVainilla/60 rounded-xl p-3 border border-borderBeige/50 flex items-center space-x-2 text-[11px] text-cafeTostado mt-4">
+                    <svg class="w-4 h-4 text-cafeTostado/80 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>Este pedido ya fue entregado. Solo puedes calificar pedidos con estado Entregado.</span>
+                </div>
+
+            </div>
+
+            <!-- Columna Derecha: Resumen del Pedido (5 cols) -->
+            <div class="lg:col-span-5 bg-blancoCalido rounded-xl-custom border border-borderBeige/50 shadow-sm p-6 sm:p-8 space-y-6">
+                
+                <div class="flex items-start justify-between border-b border-borderBeige/60 pb-4">
+                    <div>
+                        <h2 class="font-playfair text-2xl font-bold text-espresso">Pedido #D042</h2>
+                        <div class="mt-1 space-y-0.5 text-xs text-cafeTostado/80">
+                            <p class="font-semibold text-espresso">María López</p>
+                            <p>22 oct 2026</p>
+                        </div>
+                    </div>
+                    <!-- Badge de estatus en Verde Matcha -->
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold bg-verdeMatchaClaro text-verdeMatcha border border-verdeMatcha/30">
+                        • Entregado
+                    </span>
+                </div>
+
+                <!-- Tipo de entrega -->
+                <div class="bg-cremaVainilla/60 rounded-xl p-3.5 border border-borderBeige/50 flex items-start space-x-3 text-xs text-espresso">
+                    <svg class="w-4 h-4 text-mango flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <div>
+                        <p class="font-semibold text-[11px] text-cafeTostado">Recolección en tienda</p>
+                        <p class="text-espresso font-medium">Hoy 21:30–22:00</p>
+                    </div>
+                </div>
+
+                <!-- Lista de productos -->
+                <div class="space-y-4 pt-2">
+                    <div class="flex items-center justify-between text-xs text-espresso">
+                        <div class="flex items-center space-x-3">
+                            <span class="font-bold text-cafeTostado">1 ×</span>
+                            <span>Marquesita Clásica</span>
+                        </div>
+                        <span class="font-semibold">$55.00</span>
+                    </div>
+                </div>
+
+                <!-- Total -->
+                <div class="pt-4 border-t border-borderBeige/60 flex justify-between items-center text-espresso">
+                    <span class="font-playfair text-lg font-bold">Total · MXN</span>
+                    <span class="font-playfair text-2xl font-bold text-espresso">$55.00</span>
+                </div>
+
+                <!-- Estatus de Pago -->
+                <div class="pt-2 border-t border-borderBeige/40 flex items-center space-x-2 text-xs text-verdeMatcha font-semibold">
+                    <svg class="w-4 h-4 text-verdeMatcha" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>Pago en línea confirmado</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="w-full bg-rosaFresa py-8 px-6 md:px-12 mt-auto">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-espresso">
+            
+            <!-- Columna 1: Ubicación -->
+            <div class="space-y-2">
+                <h3 class="font-playfair text-xl font-bold text-espresso">Ubicación</h3>
+                <p class="font-sans text-sm font-medium leading-relaxed opacity-90">
+                    BLVD. Atotonilco 2002,<br>
+                    Brisas del Pedregal, León, Gto. 37295
+                </p>
+            </div>
+
+            <!-- Columna 2: Horario -->
+            <div class="space-y-2 md:text-center">
+                <h3 class="font-playfair text-xl font-bold text-espresso">Horario</h3>
+                <p class="font-sans text-sm font-medium leading-relaxed opacity-90">
+                    Jueves a Domingo<br>
+                    7:30 – 11:00
+                </p>
+            </div>
+
+            <!-- Columna 3: Contáctanos -->
+            <div class="space-y-2 md:text-right">
+                <h3 class="font-playfair text-xl font-bold text-espresso">Contactanos</h3>
+                <p class="font-sans text-sm font-medium leading-relaxed opacity-90">
+                    479 430 00 14
+                </p>
+            </div>
+
+        </div>
+    </footer>
+
+</body>
+</html>

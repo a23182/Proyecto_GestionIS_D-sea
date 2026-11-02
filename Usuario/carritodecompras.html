@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D'SEA | Carrito de Compras</title>
+    
+    <!-- CDN de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        espresso: '#2B211D',
+                        cafeTostado: '#694430',
+                        caramelo: '#B57A50',
+                        mango: '#E29A53',
+                        cremaVainilla: '#FAF4EC',
+                        blancoCalido: '#FFFCF8',
+                        rosaFresa: '#D59B9C',
+                        borderBeige: '#E4D7CA',
+                    },
+                    fontFamily: {
+                        playfair: ['"Playfair Display"', 'serif'],
+                        sans: ['"DM Sans"', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        'xl-custom': '24px',
+                        'lg-custom': '16px',
+                        'md-custom': '12px',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Archivo de Estilos Personalizados -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-rosaFresa selection:text-white bg-cremaVainilla">
+
+    <!-- Encabezado / Barra de Navegación -->
+    <header class="w-full bg-blancoCalido py-4 px-6 md:px-12 border-b border-borderBeige/40 shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            
+            <!-- Enlaces de navegación a la izquierda -->
+            <nav class="flex items-center space-x-6 text-sm font-medium">
+                <a href="inicio.html" class="text-cafeTostado/80 hover:text-espresso font-medium transition-colors">Inicio</a>
+                <a href="menu.html" class="text-cafeTostado/80 hover:text-espresso font-medium transition-colors">Menú</a>
+            </nav>
+
+            <!-- Logo en el centro -->
+            <div class="flex items-center justify-center">
+                <a href="inicio.html" class="flex flex-col items-center focus:outline-none group">
+                    <div class="relative h-12 w-32 sm:w-40 flex items-center justify-center">
+                        <img 
+                            src="logo_dsea.png" 
+                            alt="Logo D'SEA" 
+                            class="max-h-full max-w-full object-contain"
+                            onerror="this.src='logo_dsea';"
+                        />
+                    </div>
+                </a>
+            </div>
+
+            <!-- Botones/Iconos de acción a la derecha -->
+            <div class="flex items-center space-x-4 text-espresso">
+                <!-- Botón Carrito con contador -->
+                <a href="carritodecompras.html" class="relative px-3.5 py-1.5 rounded-full bg-cremaVainilla border border-borderBeige hover:bg-borderBeige/30 transition-colors flex items-center space-x-2" title="Ver carrito">
+                    <svg class="w-4 h-4 text-espresso" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                    </svg>
+                    <span class="text-xs font-semibold hidden sm:inline">Carrito</span>
+                    <span id="badge-carrito" class="px-1.5 py-0.2 bg-espresso text-cremaVainilla rounded-full text-[10px] font-bold">1</span>
+                </a>
+
+                <!-- Acciones de cuenta (Ingresar / Únete) -->
+                <a href="iniciosesion.html" class="text-xs font-medium text-espresso hover:text-cafeTostado transition-colors">Ingresar</a>
+                <a href="registro.html" class="px-3.5 py-1.5 rounded-full bg-espresso text-cremaVainilla text-xs font-medium hover:bg-cafeTostado transition-colors">Únete</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Área de contenido principal -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 md:px-12 py-8 md:py-12">
+        
+        <!-- Título principal -->
+        <h1 class="font-playfair text-3xl sm:text-4xl font-bold text-espresso mb-8">
+            Carrito de Compras
+        </h1>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Columna Izquierda: Lista de Productos en el Carrito (8 cols) -->
+            <div class="lg:col-span-8 bg-blancoCalido rounded-xl-custom border border-borderBeige/50 shadow-sm p-6 sm:p-8 flex flex-col justify-between min-h-[400px]">
+                
+                <div class="space-y-6">
+                    <!-- Item del Carrito -->
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-borderBeige/60">
+                        
+                        <div class="flex items-start space-x-4">
+                            <!-- Imagen del Producto -->
+                            <div class="w-20 h-20 sm:w-24 sm:h-24 bg-cremaVainilla rounded-lg overflow-hidden border border-borderBeige/40 flex-shrink-0">
+                                <img src="marquesita.jpeg" alt="Marquesita Clásica" class="w-full h-full object-cover" onerror="this.src='marquesita.jpeg';">
+                            </div>
+
+                            <!-- Información del Producto -->
+                            <div class="space-y-1">
+                                <h2 class="font-playfair text-xl font-bold text-espresso">Marquesita Clásica</h2>
+                                <p class="text-xs text-cafeTostado/80">1 porción · Sin extras adicionales</p>
+                                <p class="text-xs font-mono text-cafeTostado/60">#MC-101</p>
+                                
+                                <!-- Ingredientes seleccionados agregados -->
+                                <div class="pt-1 text-xs text-espresso/90 font-medium space-y-0.5">
+                                    <p>• Queso: <span class="text-cafeTostado">Philadelphia</span></p>
+                                    <p>• Untable: <span class="text-cafeTostado">Nutella</span></p>
+                                    <p>• Topping: <span class="text-cafeTostado">Almendra</span></p>
+                                </div>
+
+                                <!-- Botones de acción del ítem -->
+                                <div class="flex items-center space-x-2 pt-3">
+                                    <a href="detallemarquesita.html" class="px-3 py-1 rounded-full border border-borderBeige text-xs text-espresso hover:bg-cremaVainilla transition-colors inline-block">
+                                        Ver producto
+                                    </a>
+                                    <button type="button" class="px-3 py-1 rounded-full border border-borderBeige text-xs text-espresso hover:bg-cremaVainilla transition-colors">
+                                        Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Precio y Control de Cantidad -->
+                        <div class="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto mt-2 sm:mt-0 gap-3">
+                            <span id="precio-item" class="font-playfair text-xl font-bold text-mango">$55.00</span>
+                            
+                            <div class="flex items-center border border-borderBeige rounded-lg bg-cremaVainilla overflow-hidden">
+                                <button type="button" id="btn-disminuir" class="px-2.5 py-1 text-espresso hover:bg-borderBeige/50 transition-colors font-bold text-xs">−</button>
+                                <span id="cantidad-val" class="px-3 py-1 text-xs font-bold text-espresso">1</span>
+                                <button type="button" id="btn-incrementar" class="px-2.5 py-1 text-espresso hover:bg-borderBeige/50 transition-colors font-bold text-xs">+</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Subtotal inferior de la lista -->
+                <div class="pt-6 flex justify-end items-center space-x-2 text-espresso">
+                    <span class="font-playfair text-lg font-bold">Subtotal:</span>
+                    <span id="subtotal-lista" class="font-playfair text-xl font-bold text-mango">$55.00</span>
+                </div>
+
+            </div>
+
+            <!-- Columna Derecha: Orden de Pedido (4 cols) -->
+            <div class="lg:col-span-4 bg-blancoCalido rounded-xl-custom border border-borderBeige/50 shadow-sm p-6 sm:p-8 space-y-6">
+                <h2 class="font-playfair text-2xl font-bold text-espresso border-b border-borderBeige/60 pb-3">
+                    Orden de pedido
+                </h2>
+
+                <div class="space-y-3 text-sm">
+                    <div class="flex justify-between items-center text-cafeTostado font-medium">
+                        <span>Subtotal</span>
+                        <span id="resumen-subtotal" class="font-playfair font-bold text-mango">$55.00</span>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-borderBeige/60 flex justify-between items-center">
+                    <span class="font-playfair text-lg font-bold text-espresso">Total a Pagar</span>
+                    <span id="resumen-total" class="font-playfair text-2xl font-bold text-mango">$55.00</span>
+                </div>
+
+                <div class="space-y-3 pt-2">
+                    <a href="identificacionpago.html" class="w-full py-3 rounded-xl bg-espresso text-cremaVainilla text-xs font-medium hover:bg-cafeTostado transition-colors shadow-sm inline-block text-center">
+                        Continuar al Pago
+                    </a>
+                    <div class="text-center">
+                        <a href="menu.html" class="text-xs text-mango hover:underline font-medium inline-block">
+                            Seguir Comprando
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="w-full bg-rosaFresa py-8 px-6 md:px-12 mt-auto">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-espresso">
+            
+            <!-- Columna 1: Ubicación -->
+            <div class="space-y-2">
+                <h3 class="font-playfair text-xl font-bold text-espresso">Ubicación</h3>
+                <p class="font-sans text-sm font-medium leading-relaxed opacity-90">
+                    BLVD. Atotonilco 2002,<br>
+                    Brisas del Pedregal, León, Gto. 37295
+                </p>
+            </div>
+
+            <!-- Columna 2: Horario -->
+            <div class="space-y-2 md:text-center">
+                <h3 class="font-playfair text-xl font-bold text-espresso">Horario</h3>
+                <p class="font-sans text-sm font-medium leading-relaxed opacity-90">
+                    Jueves a Domingo<br>
+                    7:30 – 11:00
+                </p>
+            </div>
+
+            <!-- Columna 3: Contáctanos -->
+            <div class="space-y-2 md:text-right">
+                <h3 class="font-playfair text-xl font-bold text-espresso">Contactanos</h3>
+                <p class="font-sans text-sm font-medium leading-relaxed opacity-90">
+                    479 430 00 14
+                </p>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- Script para funcionalidad del contador de cantidad y actualización de precios -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnDisminuir = document.getElementById('btn-disminuir');
+            const btnIncrementar = document.getElementById('btn-incrementar');
+            const cantidadVal = document.getElementById('cantidad-val');
+            const precioItem = document.getElementById('precio-item');
+            const subtotalLista = document.getElementById('subtotal-lista');
+            const resumenSubtotal = document.getElementById('resumen-subtotal');
+            const resumenTotal = document.getElementById('resumen-total');
+            const badgeCarrito = document.getElementById('badge-carrito');
+
+            const PRECIO_UNITARIO = 55.00;
+            let cantidad = 1;
+
+            function actualizarValores() {
+                cantidadVal.textContent = cantidad;
+                badgeCarrito.textContent = cantidad;
+                
+                const totalCalculado = (PRECIO_UNITARIO * cantidad).toFixed(2);
+                const textoPrecio = `$${totalCalculado}`;
+
+                precioItem.textContent = textoPrecio;
+                subtotalLista.textContent = textoPrecio;
+                resumenSubtotal.textContent = textoPrecio;
+                resumenTotal.textContent = textoPrecio;
+            }
+
+            btnDisminuir.addEventListener('click', () => {
+                if (cantidad > 1) {
+                    cantidad--;
+                    actualizarValores();
+                }
+            });
+
+            btnIncrementar.addEventListener('click', () => {
+                cantidad++;
+                actualizarValores();
+            });
+        });
+    </script>
+
+</body>
+</html>

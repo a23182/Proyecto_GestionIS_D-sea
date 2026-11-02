@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D'SEA | Resumen del pedido</title>
+    
+    <!-- CDN de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        espresso: '#2B211D',
+                        cafeTostado: '#694430',
+                        caramelo: '#B57A50',
+                        mango: '#E29A53',
+                        cremaVainilla: '#FAF4EC',
+                        blancoCalido: '#FFFCF8',
+                        rosaFresa: '#D59B9C',
+                        borderBeige: '#E4D7CA',
+                    },
+                    fontFamily: {
+                        playfair: ['"Playfair Display"', 'serif'],
+                        sans: ['"DM Sans"', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        'xl-custom': '24px',
+                        'lg-custom': '16px',
+                        'md-custom': '12px',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Archivo de Estilos Personalizados -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-rosaFresa selection:text-white bg-cremaVainilla">
+
+    <!-- Encabezado / Barra de Navegación en Blanco Cálido (#FFFCF8) -->
+    <header class="w-full bg-blancoCalido py-4 px-6 md:px-12 border-b border-borderBeige/40 shadow-sm">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            
+            <!-- Enlaces de navegación a la izquierda -->
+            <nav class="flex items-center space-x-6 text-sm font-medium">
+                <a href="inicio.html" class="text-cafeTostado/80 hover:text-espresso font-medium transition-colors">Inicio</a>
+                <a href="menu.html" class="text-cafeTostado/80 hover:text-espresso font-medium transition-colors">Menú</a>
+            </nav>
+
+            <!-- Logo en el centro -->
+            <div class="flex items-center justify-center">
+                <a href="inicio.html" class="flex flex-col items-center focus:outline-none group">
+                    <div class="relative h-12 w-32 sm:w-40 flex items-center justify-center">
+                        <img 
+                            src="logo_dsea.png" 
+                            alt="Logo D'SEA" 
+                            class="max-h-full max-w-full object-contain"
+                            onerror="this.src='logo_dsea';"
+                        />
+                    </div>
+                </a>
+            </div>
+
+            <!-- Botones/Iconos de acción a la derecha -->
+            <div class="flex items-center space-x-4 text-espresso">
+                <!-- Buscador -->
+                <button type="button" class="p-1 hover:opacity-75 transition-opacity" title="Buscar">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </button>
+
+                <!-- Icono de Usuario (Perfil/Datos del cliente) -->
+                <a href="datoscliente.html" class="p-1 hover:opacity-75 transition-opacity" title="Mi perfil">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                </a>
+                
+                <!-- Carrito con contador badge -->
+                <a href="carritodecompras.html" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-cremaVainilla border border-borderBeige hover:bg-borderBeige/30 transition-colors">
+                    <svg class="w-4 h-4 text-espresso" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                    </svg>
+                    <span class="text-xs font-semibold">Carrito</span>
+                    <span class="ml-1 px-1.5 py-0.2 bg-espresso text-cremaVainilla rounded-full text-[10px] font-bold">2</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Área de contenido principal -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 md:px-12 py-8 md:py-12 space-y-8">
+        
+        <!-- Título principal -->
+        <div>
+            <h1 class="font-playfair text-3xl sm:text-4xl font-bold text-espresso">
+                Estado del Pedido
+            </h1>
+            <div class="w-full h-[1px] bg-borderBeige mt-4"></div>
+        </div>
+
+        <!-- Sección de Pasos de Estado del Pedido -->
+        <section class="bg-blancoCalido rounded-xl-custom shadow-sm border border-borderBeige/50 p-8 md:p-12 relative overflow-hidden">
+            
+            <div class="max-w-3xl mx-auto relative flex flex-col md:flex-row items-center justify-between">
+                
+                <!-- Línea conectora de fondo completa (Detrás de los círculos) -->
+                <div class="hidden md:block absolute top-[56px] left-[15%] right-[15%] h-2 bg-borderBeige/60 -translate-y-1/2 z-0"></div>
+                <!-- Línea conectora activa en color Mango -->
+                <div class="hidden md:block absolute top-[56px] left-[15%] w-[35%] h-2 bg-mango -translate-y-1/2 z-0"></div>
+
+                <!-- Paso 1: En preparación (Activo) -->
+                <div class="flex flex-col items-center text-center space-y-3 relative z-10">
+                    <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-blancoCalido border-2 border-mango flex items-center justify-center shadow-sm">
+                        <!-- Icono SVG Cuchillo de cocina -->
+                        <svg class="w-10 h-10 sm:w-12 sm:h-12 text-espresso" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.5 3.5L4 14l2 2 10.5-10.5a2.12 2.12 0 00-3-3zM6 16l-3 3a1 1 0 001 1h3v-4z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-playfair text-xl sm:text-2xl font-bold text-espresso">
+                        En preparación
+                    </h3>
+                </div>
+
+                <!-- Paso 2: Listo para recolección -->
+                <div class="flex flex-col items-center text-center space-y-3 relative z-10 mt-8 md:mt-0">
+                    <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-blancoCalido border-2 border-borderBeige flex items-center justify-center shadow-sm">
+                        <!-- Icono Bolsa de compra -->
+                        <svg class="w-10 h-10 sm:w-12 sm:h-12 text-espresso" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-playfair text-xl sm:text-2xl font-bold text-espresso opacity-75">
+                        Listo para recolección
+                    </h3>
+                </div>
+
+                <!-- Paso 3: Entregado -->
+                <div class="flex flex-col items-center text-center space-y-3 relative z-10 mt-8 md:mt-0">
+                    <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-blancoCalido border-2 border-borderBeige flex items-center justify-center shadow-sm">
+                        <!-- Icono Entrega / Caja -->
+                        <svg class="w-10 h-10 sm:w-12 sm:h-12 text-espresso" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-playfair text-xl sm:text-2xl font-bold text-espresso opacity-75">
+                        Entregado
+                    </h3>
+                </div>
+
+            </div>
+
+            <!-- Recolección estimada -->
+            <div class="text-center mt-10 pt-6 border-t border-borderBeige/40">
+                <p class="text-xs font-semibold text-cafeTostado uppercase tracking-wider">Recolección Estimada:</p>
+                <p class="font-playfair text-xl sm:text-2xl font-bold text-espresso mt-0.5">21:30 – 22:00</p>
+            </div>
+
+        </section>
+
+        <!-- Contenedor inferior: Lista de Productos y Alerta de Demanda -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Columna Izquierda: Listado de Productos (8 cols) -->
+            <div class="lg:col-span-8 bg-blancoCalido rounded-xl-custom shadow-sm border border-borderBeige/50 p-6 md:p-8 divide-y divide-borderBeige/60 space-y-6">
+                
+                <!-- Producto 1: Marquesita Clásica -->
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pt-2">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-24 h-28 sm:w-28 sm:h-32 rounded-xl-custom overflow-hidden bg-cremaVainilla flex-shrink-0 border border-borderBeige/40">
+                            <img 
+                                src="marquesita.jpeg" 
+                                alt="Marquesita Clásica" 
+                                class="w-full h-full object-cover"
+                                onerror="this.src='marquesita.jpeg';"
+                            />
+                        </div>
+                        <div class="space-y-1">
+                            <h2 class="font-playfair text-xl sm:text-2xl font-bold text-espresso">
+                                Marquesita Clásica
+                            </h2>
+                            <p class="text-xs font-semibold text-cafeTostado">Personalización:</p>
+                            <ul class="text-xs text-espresso space-y-0.5 opacity-90">
+                                <li>· Holandes</li>
+                                <li>· Nutella</li>
+                                <li>· Nuez</li>
+                                <li>· Almendra <span class="text-mango font-medium">+$10.00</span></li>
+                            </ul>
+                            <p class="text-[11px] text-cafeTostado/60 pt-1">#MC-101</p>
+                        </div>
+                    </div>
+                    <div class="self-end sm:self-center">
+                        <span class="font-playfair text-2xl font-bold text-mango">$130.00</span>
+                    </div>
+                </div>
+
+                <!-- Producto 2: Frappe Oreo -->
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pt-6">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-24 h-28 sm:w-28 sm:h-32 rounded-xl-custom overflow-hidden bg-cremaVainilla flex-shrink-0 border border-borderBeige/40">
+                            <img 
+                                src="frappe.jpeg" 
+                                alt="Frappe Oreo" 
+                                class="w-full h-full object-cover"
+                                onerror="this.src='frappe.jpeg';"
+                            />
+                        </div>
+                        <div class="space-y-1">
+                            <h2 class="font-playfair text-xl sm:text-2xl font-bold text-espresso">
+                                Frappe Oreo
+                            </h2>
+                            <p class="text-xs font-semibold text-cafeTostado pt-1">Personalización:</p>
+                            <p class="text-xs text-espresso opacity-90">· Tapioca <span class="text-mango font-medium">+$10.00</span></p>
+                            <p class="text-[11px] text-cafeTostado/60 pt-2">#FO-205</p>
+                        </div>
+                    </div>
+                    <div class="self-end sm:self-center">
+                        <span class="font-playfair text-2xl font-bold text-mango">$50.00</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Columna Derecha: Alerta de Demanda (4 cols) -->
+            <aside class="lg:col-span-4 bg-rosaFresa/60 rounded-xl-custom shadow-sm border border-rosaFresa p-6 md:p-8 flex flex-col items-center text-center space-y-4 text-espresso">
+                <div class="w-12 h-12 rounded-full bg-blancoCalido/80 flex items-center justify-center text-espresso shadow-sm">
+                    <svg class="w-6 h-6 text-espresso" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                </div>
+                <h3 class="font-playfair text-2xl font-bold text-espresso">
+                    Alerta de Demanda
+                </h3>
+                <p class="font-sans text-xs sm:text-sm leading-relaxed opacity-90">
+                    Estamos recibiendo muchos pedidos en este momento, por lo que el tiempo de preparación podría ser mayor de lo habitual. Agradecemos su paciencia.
+                </p>
+            </aside>
+
+        </div>
+
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="w-full bg-rosaFresa py-8 px-6 md:px-12 mt-auto">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-espresso">
+            
+            <div class="space-y-2">
+                <h3 class="font-playfair text-xl font-bold text-espresso">Ubicación</h3>
+                <p class="font-sans text-sm font-medium leading-relaxed opacity-90">
+                    BLVD. Atotonilco 2002,<br>
+                    Brisas del Pedregal, León, Gto. 37295
+                </p>
+            </div>
+
+            <div class="space-y-2 md:text-center">
+                <h3 class="font-playfair text-xl font-bold text-espresso">Horario</h3>
+                <p class="font-sans text-sm font-medium leading-relaxed opacity-90">
+                    Jueves a Domingo<br>
+                    7:30 – 11:00
+                </p>
+            </div>
+
+            <div class="space-y-2 md:text-right">
+                <h3 class="font-playfair text-xl font-bold text-espresso">Contactanos</h3>
+                <p class="font-sans text-sm font-medium leading-relaxed opacity-90">
+                    479 430 00 14
+                </p>
+            </div>
+
+        </div>
+    </footer>
+
+</body>
+</html>
