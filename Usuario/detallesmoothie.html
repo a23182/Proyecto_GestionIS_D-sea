@@ -38,7 +38,7 @@
     <!-- Archivo de Estilos Personalizados -->
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-rosaFresa selection:text-white bg-cremaVainilla">
+<body data-page="detalle:bebida" class="min-h-screen flex flex-col justify-between selection:bg-rosaFresa selection:text-white bg-cremaVainilla">
 
     <!-- Encabezado / Barra de Navegación en Blanco Cálido (#FFFCF8) -->
     <header class="w-full bg-blancoCalido py-4 px-6 md:px-12 border-b border-borderBeige/40 shadow-sm sticky top-0 z-50">
@@ -278,28 +278,6 @@
         </div>
     </footer>
 
-    <!-- Script para funcionalidad del contador de cantidad -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const btnDisminuir = document.getElementById('btn-disminuir');
-            const btnIncrementar = document.getElementById('btn-incrementar');
-            const cantidadVal = document.getElementById('cantidad-val');
-
-            let cantidad = 1;
-
-            btnDisminuir.addEventListener('click', () => {
-                if (cantidad > 1) {
-                    cantidad--;
-                    cantidadVal.textContent = cantidad;
-                }
-            });
-
-            btnIncrementar.addEventListener('click', () => {
-                cantidad++;
-                cantidadVal.textContent = cantidad;
-            });
-        });
-    </script>
-
+    <script src="dsea.js"></script>
 </body>
 </html>

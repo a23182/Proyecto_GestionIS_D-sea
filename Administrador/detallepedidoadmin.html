@@ -38,7 +38,7 @@
     <!-- Archivo de Estilos Personalizados -->
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-rosaFresa selection:text-white bg-cremaVainilla">
+<body data-page="detalleadmin" data-area="admin" class="min-h-screen flex flex-col justify-between selection:bg-rosaFresa selection:text-white bg-cremaVainilla">
 
     <!-- Encabezado / Barra de Navegación del Administrador -->
     <header class="w-full bg-blancoCalido py-4 px-6 md:px-12 border-b border-borderBeige/40 shadow-sm sticky top-0 z-50">
@@ -163,7 +163,7 @@
                 </div>
 
                 <!-- Tarjeta Información del cliente -->
-                <div class="bg-blancoCalido rounded-xl-custom border border-espresso/80 p-5 shadow-sm space-y-4">
+                <div id="info-cliente" class="bg-blancoCalido rounded-xl-custom border border-espresso/80 p-5 shadow-sm space-y-4">
                     <h3 class="text-xs font-bold text-espresso">Información del cliente</h3>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-espresso">
@@ -222,7 +222,7 @@
                 </div>
 
                 <!-- Lista de opciones de estado estilo menú -->
-                <div class="border border-espresso/80 rounded-xl overflow-hidden divide-y divide-espresso/80 bg-blancoCalido">
+                <div id="lista-estados" class="border border-espresso/80 rounded-xl overflow-hidden divide-y divide-espresso/80 bg-blancoCalido">
                     
                     <!-- Opción 1: En preparación (Activo) -->
                     <div class="p-3.5 bg-[#FAF3EC] flex items-center justify-between cursor-pointer">
@@ -308,5 +308,6 @@
 
     </main>
 
+    <script src="dsea.js"></script>
 </body>
 </html>

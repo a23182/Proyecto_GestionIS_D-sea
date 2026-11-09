@@ -38,7 +38,7 @@
     <!-- Archivo de Estilos Personalizados -->
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-rosaFresa selection:text-white bg-cremaVainilla">
+<body data-page="carrito" class="min-h-screen flex flex-col justify-between selection:bg-rosaFresa selection:text-white bg-cremaVainilla">
 
     <!-- Encabezado / Barra de Navegación -->
     <header class="w-full bg-blancoCalido py-4 px-6 md:px-12 border-b border-borderBeige/40 shadow-sm sticky top-0 z-50">
@@ -219,47 +219,6 @@
         </div>
     </footer>
 
-    <!-- Script para funcionalidad del contador de cantidad y actualización de precios -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const btnDisminuir = document.getElementById('btn-disminuir');
-            const btnIncrementar = document.getElementById('btn-incrementar');
-            const cantidadVal = document.getElementById('cantidad-val');
-            const precioItem = document.getElementById('precio-item');
-            const subtotalLista = document.getElementById('subtotal-lista');
-            const resumenSubtotal = document.getElementById('resumen-subtotal');
-            const resumenTotal = document.getElementById('resumen-total');
-            const badgeCarrito = document.getElementById('badge-carrito');
-
-            const PRECIO_UNITARIO = 55.00;
-            let cantidad = 1;
-
-            function actualizarValores() {
-                cantidadVal.textContent = cantidad;
-                badgeCarrito.textContent = cantidad;
-                
-                const totalCalculado = (PRECIO_UNITARIO * cantidad).toFixed(2);
-                const textoPrecio = `$${totalCalculado}`;
-
-                precioItem.textContent = textoPrecio;
-                subtotalLista.textContent = textoPrecio;
-                resumenSubtotal.textContent = textoPrecio;
-                resumenTotal.textContent = textoPrecio;
-            }
-
-            btnDisminuir.addEventListener('click', () => {
-                if (cantidad > 1) {
-                    cantidad--;
-                    actualizarValores();
-                }
-            });
-
-            btnIncrementar.addEventListener('click', () => {
-                cantidad++;
-                actualizarValores();
-            });
-        });
-    </script>
-
+    <script src="dsea.js"></script>
 </body>
 </html>
