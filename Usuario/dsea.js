@@ -17,7 +17,7 @@
 
   /* ---------- utilidades ---------- */
   function load(k, d) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
-  function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
   function money(n) { return '$' + Number(n).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function qs(name) { return new URLSearchParams(location.search).get(name); }
@@ -99,7 +99,7 @@
       var email = (d.email || '').trim().toLowerCase();
       if (!d.nombre || !email || !d.password) return { ok: false, msg: 'Completa todos los campos.' };
       if (d.password !== d.confirm) return { ok: false, msg: 'Las contraseñas no coinciden.' };
-      if (d.password.length < 4) return { ok: false, msg: 'La contraseña debe tener al menos 4 caracteres.' };
+      if (d.password.length < 4 || d.password.length > 128) return { ok: false, msg: 'La contraseña debe tener entre 4 y 128 caracteres.' };
       if (users.some(function (x) { return x.email.toLowerCase() === email; })) return { ok: false, msg: 'Ya existe una cuenta con ese correo.' };
       var u = { nombre: d.nombre.trim(), email: email, tel: (d.tel || '').trim(), password: d.password, rol: 'cliente', notas: '' };
       users.push(u); save(K.users, users);
@@ -144,7 +144,7 @@
       var o = {
         folio: Orders.nextFolio(),
         cliente: { nombre: u.nombre, email: u.email, tel: u.tel || '' },
-        items: items.map(function (i) { return { producto: i.producto, precioUnit: i.precioUnit, cantidad: i.cantidad, detalle: i.detalle, img: i.img }; }),
+        items: items.map(function (i) { return { producto: i.producto, precioUnit: i.precioUnit, cantidad: i.cantidad, detalle: i.detalle, img: /^data:/.test(i.img || '') ? '' : i.img }; }),
         total: Cart.total(), metodo: opts.metodo, horario: opts.horario || null,
         estado: 'Recibido', fecha: Date.now(), calificacion: null
       };
@@ -165,7 +165,7 @@
   };
   var MenuStore = {
     all: function () { return load(K.menu, MENU_SEED); },
-    save: function (m) { save(K.menu, m); }
+    save: function (m) { return save(K.menu, m); }
   };
 
   /* ---------- toast ---------- */
@@ -187,7 +187,6 @@
   }
 
   /* ---------- cabecera común ---------- */
-  var BTN_OUT = 'px-5 py-1.5 rounded-full border border-espresso text-espresso text-sm font-medium hover:bg-espresso hover:text-cremaVainilla transition-all duration-200 inline-block text-center';
   function patchHeader() {
     // contador del carrito
     document.querySelectorAll('a[href="carritodecompras.html"]').forEach(function (a) {
@@ -196,30 +195,11 @@
         var n = Cart.count(); last.textContent = n; last.style.display = n ? '' : 'none';
       }
     });
-    // botones Ingresar / Únete → si hay sesión, mostrar nombre + salir
-    var ing = document.querySelector('header a[href="iniciosesion.html"]');
-    var u = Auth.user();
-    if (ing && u && u.rol === 'cliente') {
-      var box = ing.parentElement; box.innerHTML = '';
-      var perfil = document.createElement('a'); perfil.href = 'datoscliente.html'; perfil.className = BTN_OUT; perfil.textContent = u.nombre.split(' ')[0];
-      var out = document.createElement('a'); out.href = '#'; out.className = 'px-5 py-1.5 rounded-full bg-espresso text-cremaVainilla text-sm font-medium hover:bg-cafeTostado transition-all duration-200 shadow-sm inline-block text-center'; out.textContent = 'Salir';
-      out.onclick = function (e) { e.preventDefault(); Auth.logout(); location.href = 'inicio.html'; };
-      box.appendChild(perfil); box.appendChild(out);
-    }
-    // páginas con ícono de perfil (sin botones Ingresar/Únete): añadir "Salir" si hay sesión
-    var ico = document.querySelector('header a[href="datoscliente.html"]');
-    if (ico && u && u.rol === 'cliente' && !document.getElementById('cliente-salir')) {
-      var so = document.createElement('a'); so.id = 'cliente-salir'; so.href = '#'; so.textContent = 'Salir';
-      so.className = 'text-xs font-semibold text-cafeTostado hover:text-espresso transition-colors';
-      so.onclick = function (e) { e.preventDefault(); Auth.logout(); location.href = 'inicio.html'; };
-      ico.parentNode.insertBefore(so, ico.nextSibling);
-    }
-    // enlace "perfil" del header sin sesión → login
-    document.querySelectorAll('header a[href="datoscliente.html"]').forEach(function (a) {
-      if (!u) a.setAttribute('href', 'iniciosesion.html');
-    });
-    // cabecera admin: nombre y salir
+    // cuenta (cliente): enlaces de texto, o nombre + salir si hay sesión
     var adm = document.body.getAttribute('data-area') === 'admin';
+    var u = Auth.user();
+    if (!adm) navCuenta();
+    // cabecera admin: nombre y salir
     if (adm && u) {
       var right = document.querySelector('header .relative, header button[title="Notificaciones"]');
       var hdr = document.querySelector('header > div');
@@ -232,6 +212,157 @@
       document.querySelectorAll('main h1').forEach(function (h) { if (/Buen día/.test(h.textContent)) h.textContent = 'Buen día, ' + u.nombre.split(' ')[0]; });
       document.querySelectorAll('main p').forEach(function (p) { if (/^\w+ \d+, \w+ \d{4}$/.test(p.textContent.trim())) p.textContent = fechaLarga(); });
     }
+  }
+
+  /* ---------- barra superior: cuenta + drawer de acceso ----------
+     Marcado en HTML:  [data-nav-account]  contiene los enlaces "Ingresar" / "Crear cuenta"
+     con  data-auth-open="login|register"  (href normal = respaldo sin JS).            */
+  var SVG = function (d) { return '<svg class="dsea-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>'; };
+  var ICO = {
+    user:  SVG('<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>'),
+    out:   SVG('<path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"/><path d="M10 17l5-5-5-5M15 12H4"/>'),
+    close: SVG('<path d="M6 6l12 12M18 6L6 18"/>')
+  };
+  // páginas que se pueden ver sin sesión: ahí el login/logout se actualiza sin cambiar de página
+  var PAGINAS_PUBLICAS = ['', 'menu', 'detalle', 'carrito'];
+  function paginaBase() { return (document.body.getAttribute('data-page') || '').split(':')[0]; }
+
+  var navHtmlSinSesion = null;
+  function navCuenta() {
+    var box = document.querySelector('[data-nav-account]'); if (!box) return;
+    if (navHtmlSinSesion === null) navHtmlSinSesion = box.innerHTML;       // marcado estático = estado "sin sesión"
+    var u = Auth.user(), estado = u && u.rol === 'cliente' ? 'in:' + u.nombre : 'out';
+    if (box.getAttribute('data-estado') === estado) return;                // idempotente
+    box.setAttribute('data-estado', estado);
+    if (estado === 'out') { box.innerHTML = navHtmlSinSesion; return; }
+    box.innerHTML =
+      '<a href="datoscliente.html" class="dsea-link" title="Mi perfil">' + ICO.user + '<span class="dsea-desk">' + esc(u.nombre.split(' ')[0]) + '</span></a>' +
+      '<button type="button" class="dsea-link dsea-desk" data-auth-logout>Salir</button>' +
+      '<button type="button" class="dsea-icon-btn dsea-mob" aria-label="Cerrar sesión" title="Salir" data-auth-logout>' + ICO.out + '</button>';
+  }
+
+  var Drawer = (function () {
+    var root, panel, forms = {}, tabs = {}, titulo, prevFocus, actual = 'login';
+
+    function campo(label, name, type, auto, extra) {
+      return '<label class="dsea-field"><span>' + label + '</span><input name="' + name + '" type="' + type + '" autocomplete="' + auto + '"' + (extra || '') + '></label>';
+    }
+    function construir() {
+      if (root) return;
+      root = document.createElement('div'); root.id = 'dsea-auth'; root.className = 'dsea-auth';
+      root.innerHTML =
+        '<div class="dsea-auth__backdrop" data-auth-close></div>' +
+        '<aside class="dsea-auth__panel" role="dialog" aria-modal="true" aria-labelledby="dsea-auth-title" tabindex="-1">' +
+          '<div class="dsea-auth__head"><h2 class="dsea-auth__title" id="dsea-auth-title"></h2>' +
+            '<button type="button" class="dsea-icon-btn" aria-label="Cerrar" data-auth-close>' + ICO.close + '</button></div>' +
+          '<div class="dsea-auth__tabs" role="tablist">' +
+            '<button type="button" role="tab" class="dsea-auth__tab" id="dsea-tab-login" aria-controls="dsea-form-login" data-auth-tab="login">Ingresar</button>' +
+            '<button type="button" role="tab" class="dsea-auth__tab" id="dsea-tab-register" aria-controls="dsea-form-register" data-auth-tab="register">Crear cuenta</button>' +
+          '</div>' +
+          '<form id="dsea-form-login" role="tabpanel" aria-labelledby="dsea-tab-login" novalidate>' +
+            '<p class="dsea-err" role="alert" hidden></p>' +
+            campo('Correo electrónico', 'email', 'email', 'email', ' placeholder="tucorreo@ejemplo.com"') +
+            campo('Contraseña', 'password', 'password', 'current-password') +
+            '<button type="submit" class="dsea-cta">Ingresar</button>' +
+            '<button type="button" class="dsea-link" data-auth-forgot>¿Olvidaste tu contraseña?</button>' +
+            '<p class="dsea-hint">Demo: cliente@dsea.mx / 1234</p>' +
+          '</form>' +
+          '<form id="dsea-form-register" role="tabpanel" aria-labelledby="dsea-tab-register" novalidate hidden>' +
+            '<p class="dsea-err" role="alert" hidden></p>' +
+            campo('Nombre completo', 'nombre', 'text', 'name') +
+            campo('Correo electrónico', 'email', 'email', 'email') +
+            campo('Teléfono (opcional)', 'tel', 'tel', 'tel') +
+            campo('Contraseña (4 a 128 caracteres)', 'password', 'password', 'new-password') +
+            campo('Confirmar contraseña', 'confirm', 'password', 'new-password') +
+            '<button type="submit" class="dsea-cta">Crear cuenta</button>' +
+          '</form>' +
+          '<div class="dsea-auth__foot">' +
+            '<a class="dsea-link" id="dsea-auth-page" href="iniciosesion.html">Abrir como página completa</a>' +
+            '<a class="dsea-link" href="../Administrador/iniciosesionadmin.html">Acceso administrador</a>' +
+          '</div>' +
+        '</aside>';
+      document.body.appendChild(root);
+      panel = root.querySelector('.dsea-auth__panel'); titulo = root.querySelector('#dsea-auth-title');
+      ['login', 'register'].forEach(function (k) { forms[k] = root.querySelector('#dsea-form-' + k); tabs[k] = root.querySelector('#dsea-tab-' + k); });
+
+      root.addEventListener('click', function (e) {
+        if (e.target.closest('[data-auth-close]')) return cerrar();
+        var t = e.target.closest('[data-auth-tab]'); if (t) return pestana(t.getAttribute('data-auth-tab'), true);
+        if (e.target.closest('[data-auth-forgot]')) toast('Demo: usa cliente@dsea.mx / 1234');
+      });
+      forms.login.addEventListener('submit', function (e) { e.preventDefault(); enviar('login'); });
+      forms.register.addEventListener('submit', function (e) { e.preventDefault(); enviar('register'); });
+      document.addEventListener('keydown', teclado);
+    }
+
+    function pestana(k, foco) {
+      actual = k;
+      Object.keys(forms).forEach(function (n) {
+        var on = n === k;
+        forms[n].hidden = !on; tabs[n].setAttribute('aria-selected', on ? 'true' : 'false'); tabs[n].tabIndex = on ? 0 : -1;
+      });
+      titulo.textContent = k === 'login' ? 'Bienvenido de vuelta' : 'Crea tu cuenta';
+      var pg = root.querySelector('#dsea-auth-page'); if (pg) pg.setAttribute('href', k === 'login' ? 'iniciosesion.html' : 'registro.html');
+      error(forms[k], '');
+      if (foco) { var i = forms[k].querySelector('input'); if (i) i.focus(); }
+    }
+    function error(form, msg) { var p = form.querySelector('.dsea-err'); p.textContent = msg; p.hidden = !msg; }
+
+    function enviar(k) {
+      var f = forms[k], v = function (n) { return f.elements[n].value; }, r;
+      if (k === 'login') r = Auth.login(v('email'), v('password'), null);
+      else r = Auth.register({ nombre: v('nombre'), email: v('email'), tel: v('tel'), password: v('password'), confirm: v('confirm') });
+      if (!r.ok) { error(f, r.msg); return; }
+      f.reset(); error(f, '');
+      var pag = paginaBase();
+      if (r.user.rol === 'admin') { location.href = '../Administrador/dashboardadministrador.html'; return; }
+      if (pag === 'identificacion' || pag === 'crearcuenta') { location.href = 'metodopago.html'; return; }
+      cerrar(true); navCuenta();
+      toast('Hola, ' + r.user.nombre.split(' ')[0]);
+    }
+
+    function abrir(k) {
+      construir();
+      prevFocus = document.activeElement;
+      pestana(k === 'register' ? 'register' : 'login');
+      root.classList.add('is-open'); document.body.classList.add('dsea-auth-open');
+      setTimeout(function () { var i = forms[actual].querySelector('input'); if (i) i.focus(); }, 60);
+    }
+    function cerrar(sinFoco) {
+      if (!root || !root.classList.contains('is-open')) return;
+      root.classList.remove('is-open'); document.body.classList.remove('dsea-auth-open');
+      if (!sinFoco && prevFocus && prevFocus.focus && document.contains(prevFocus)) prevFocus.focus();
+    }
+    function teclado(e) {
+      if (!root || !root.classList.contains('is-open')) return;
+      if (e.key === 'Escape') { e.preventDefault(); return cerrar(); }
+      if (e.key !== 'Tab') return;
+      var f = Array.prototype.filter.call(panel.querySelectorAll('a[href],button,input,select,textarea'), function (x) { return !x.disabled && x.getClientRects().length; });
+      if (!f.length) return;
+      var a = f[0], z = f[f.length - 1];
+      if (e.shiftKey && (document.activeElement === a || document.activeElement === panel)) { e.preventDefault(); z.focus(); }
+      else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+    }
+    return { open: abrir, close: cerrar };
+  })();
+
+  // Delegación de eventos: funciona aunque el marcado de la cuenta se vuelva a pintar
+  function initNavCuenta() {
+    if (document.body.getAttribute('data-area') === 'admin') return;
+    document.addEventListener('click', function (e) {
+      var op = e.target.closest('[data-auth-open]');
+      if (op) {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;              // abrir en pestaña nueva sigue funcionando
+        var pag = paginaBase();
+        if (pag === 'login' || pag === 'registro') return;                               // ya estás en la página de acceso
+        e.preventDefault(); Drawer.open(op.getAttribute('data-auth-open')); return;
+      }
+      if (e.target.closest('[data-auth-logout]')) {
+        e.preventDefault(); Auth.logout();
+        if (PAGINAS_PUBLICAS.indexOf(paginaBase()) > -1) { navCuenta(); toast('Sesión cerrada'); }
+        else location.href = 'inicio.html';                                              // páginas con datos del cliente
+      }
+    });
   }
 
   /* ---------- bloques HTML reutilizables (mismas clases del diseño) ---------- */
@@ -326,7 +457,7 @@
     var precio = money(p.precio);
     if (bebida && seed && BEB_RANGO[p.id]) { var d = p.precio - seed.precio; precio = money(BEB_RANGO[p.id][0] + d) + ' – ' + money(BEB_RANGO[p.id][1] + d); }
     var href = MARQ_ID[p.id] ? 'detallemarquesita.html?p=' + MARQ_ID[p.id] : (BEB_PAG[p.id] || null);
-    var cuerpo = '<div class="space-y-3"><div class="w-full h-40 sm:h-48 bg-cremaVainilla rounded-none overflow-hidden"><img src="' + (bebida ? 'frappe.jpeg' : 'marquesita.jpeg') + '" alt="' + esc(p.nombre) + '" class="w-full h-full object-cover rounded-none"></div><div><h3 class="font-playfair font-bold text-base text-espresso">' + esc(p.nombre) + '</h3><p class="font-playfair font-bold text-sm text-mango mt-1">' + precio + ' <span class="text-[10px] font-normal text-cafeTostado/60">MXN</span></p>' + (agot ? '<p class="text-[11px] font-bold mt-1" style="color:#B85C54">Agotado</p>' : '') + '</div></div>';
+    var cuerpo = '<div class="space-y-3"><div class="w-full h-40 sm:h-48 bg-cremaVainilla rounded-none overflow-hidden"><img src="' + esc(p.img || (bebida ? 'frappe.jpeg' : 'marquesita.jpeg')) + '" alt="' + esc(p.nombre) + '" class="w-full h-full object-cover rounded-none"></div><div><h3 class="font-playfair font-bold text-base text-espresso">' + esc(p.nombre) + '</h3><p class="font-playfair font-bold text-sm text-mango mt-1">' + precio + ' <span class="text-[10px] font-normal text-cafeTostado/60">MXN</span></p>' + (agot ? '<p class="text-[11px] font-bold mt-1" style="color:#B85C54">Agotado</p>' : '') + '</div></div>';
     var BTN = 'mt-4 w-full py-2 bg-espresso text-cremaVainilla rounded-xl text-xs font-medium hover:bg-cafeTostado transition-colors flex items-center justify-center space-x-1.5 text-center';
     var RND = 'w-9 h-9 rounded-full bg-espresso text-cremaVainilla hover:bg-cafeTostado transition-colors flex items-center justify-center shadow-sm';
     var accion;
@@ -359,7 +490,7 @@
       if (b) {
         var p = MenuStore.all().filter(function (x) { return x.id === b.getAttribute('data-add'); })[0];
         if (!p || p.disp === false) return toast('Este producto no está disponible', false);
-        Cart.add({ producto: p.nombre, precioUnit: p.precio, cantidad: 1, detalle: [], img: p.cat === 'Bebidas' ? 'frappe.jpeg' : 'marquesita.jpeg', url: 'menu.html' });
+        Cart.add({ producto: p.nombre, precioUnit: p.precio, cantidad: 1, detalle: [], img: p.img || (p.cat === 'Bebidas' ? 'frappe.jpeg' : 'marquesita.jpeg'), url: 'menu.html' });
         toast('“' + p.nombre + '” agregado al carrito'); patchHeader(); return;
       }
       if (e.target.closest('[data-clear]')) { e.preventDefault(); var bi = document.querySelector('#dsea-buscador input'); if (bi) bi.value = ''; Pages._filtrarMenu(''); }
@@ -415,6 +546,7 @@
     var prodSeed = MENU_SEED.filter(function (m) { return m.id === prodId; })[0];
     if (!prodSt) { toast('Este producto ya no está en el menú', false); setTimeout(function () { location.replace('menu.html'); }, 1200); return; }
     var agotado = prodSt.disp === false;
+    if (prodSt.img) img.src = prodSt.img;
     var delta = 0;
 
     if (tipo === 'marquesita') {
@@ -928,6 +1060,25 @@
   };
 
   /* ---- Administración del menú ---- */
+  function leerImagen(file, cb) {
+    if (!/^image\/(png|jpe?g|webp|gif)$/.test(file.type)) return cb(null, 'Elige una imagen PNG, JPG, WEBP o GIF.');
+    if (file.size > 8 * 1024 * 1024) return cb(null, 'La imagen pesa más de 8 MB.');
+    var fr = new FileReader();
+    fr.onerror = function () { cb(null, 'No se pudo leer la imagen.'); };
+    fr.onload = function () {
+      var im = new Image();
+      im.onerror = function () { cb(null, 'La imagen está dañada o no es válida.'); };
+      im.onload = function () {
+        var r = Math.min(1, 600 / Math.max(im.width, im.height));
+        var c = document.createElement('canvas'); c.width = Math.max(1, Math.round(im.width * r)); c.height = Math.max(1, Math.round(im.height * r));
+        var g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(im, 0, 0, c.width, c.height);
+        cb(c.toDataURL('image/jpeg', 0.8));
+      };
+      im.src = fr.result;
+    };
+    fr.readAsDataURL(file);
+  }
+
   Pages.adminmenu = function () {
     var u = Auth.require('admin', 'iniciosesionadmin.html'); if (!u) return;
     var form = document.querySelector('form'); var ins = form.querySelectorAll('input'); var sel = form.querySelector('select');
@@ -947,24 +1098,69 @@
       var m = MenuStore.all().filter(function (x) { return x.cat === cat && (!q || x.nombre.toLowerCase().indexOf(q) > -1); });
       cards.innerHTML = m.map(function (p) {
         var disp = p.disp;
-        return '<div class="bg-blancoCalido rounded-xl-custom border border-borderBeige/60 shadow-sm p-6 space-y-6 flex flex-col justify-between"><div class="space-y-4"><div class="w-full h-48 bg-cremaVainilla rounded-xl overflow-hidden border border-borderBeige/40"><img src="' + (p.cat === 'Bebidas' ? 'frappe.jpeg' : 'marquesita.jpeg') + '" alt="' + esc(p.nombre) + '" class="w-full h-full object-cover" ' + (disp ? '' : 'style="opacity:.5"') + '></div><div class="flex items-start justify-between"><div><h3 class="font-playfair text-lg font-bold text-espresso">' + esc(p.nombre) + '</h3><p class="font-playfair text-xl font-bold text-espresso mt-1">' + money(p.precio) + '</p></div><button type="button" data-tog="' + p.id + '" class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold space-x-1.5 mt-1" style="background:' + (disp ? '#EBF4EC' : '#FCEBEA') + ';color:' + (disp ? '#4A7C59' : '#B85C54') + '" title="Clic para cambiar"><span class="w-1.5 h-1.5 rounded-full mr-1.5" style="background:' + (disp ? '#4A7C59' : '#B85C54') + '"></span><span>' + (disp ? 'Disponible' : 'Agotado') + '</span></button></div></div><div class="grid grid-cols-2 gap-3 pt-2"><button type="button" data-edit="' + p.id + '" class="py-2.5 rounded-xl border border-borderBeige bg-white text-xs font-medium text-espresso hover:bg-cremaVainilla/50 transition-colors shadow-sm text-center">Editar</button><button type="button" data-del="' + p.id + '" class="py-2.5 rounded-xl bg-espresso text-cremaVainilla text-xs font-medium hover:bg-cafeTostado transition-colors shadow-sm text-center">Eliminar</button></div></div>';
+        return '<div class="bg-blancoCalido rounded-xl-custom border border-borderBeige/60 shadow-sm p-6 space-y-6 flex flex-col justify-between"><div class="space-y-4"><div class="w-full h-48 bg-cremaVainilla rounded-xl overflow-hidden border border-borderBeige/40"><img src="' + esc(p.img || (p.cat === 'Bebidas' ? 'frappe.jpeg' : 'marquesita.jpeg')) + '" alt="' + esc(p.nombre) + '" class="w-full h-full object-cover" ' + (disp ? '' : 'style="opacity:.5"') + '></div><div class="flex items-start justify-between"><div><h3 class="font-playfair text-lg font-bold text-espresso">' + esc(p.nombre) + '</h3><p class="font-playfair text-xl font-bold text-espresso mt-1">' + money(p.precio) + '</p></div><button type="button" data-tog="' + p.id + '" class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold space-x-1.5 mt-1" style="background:' + (disp ? '#EBF4EC' : '#FCEBEA') + ';color:' + (disp ? '#4A7C59' : '#B85C54') + '" title="Clic para cambiar"><span class="w-1.5 h-1.5 rounded-full mr-1.5" style="background:' + (disp ? '#4A7C59' : '#B85C54') + '"></span><span>' + (disp ? 'Disponible' : 'Agotado') + '</span></button></div></div><div class="grid grid-cols-2 gap-3 pt-2"><button type="button" data-edit="' + p.id + '" class="py-2.5 rounded-xl border border-borderBeige bg-white text-xs font-medium text-espresso hover:bg-cremaVainilla/50 transition-colors shadow-sm text-center">Editar</button><button type="button" data-del="' + p.id + '" class="py-2.5 rounded-xl bg-espresso text-cremaVainilla text-xs font-medium hover:bg-cafeTostado transition-colors shadow-sm text-center">Eliminar</button></div></div>';
       }).join('') || '<p class="text-sm text-cafeTostado/70">Sin productos en esta categoría.</p>';
     }
     var editId = null; var btnAdd = form.querySelector('button[type=submit] span');
+
+    // --- imagen del producto (opcional): se reduce y se guarda en el navegador ---
+    var imgSel; // undefined = sin cambios · texto = imagen nueva · null = quitar (usa la imagen por defecto)
+    var fila = document.createElement('div'); fila.className = 'sm:col-span-12 flex items-center gap-4 pt-1';
+    fila.innerHTML = '<div class="w-14 h-14 rounded-xl overflow-hidden border border-borderBeige bg-cremaVainilla flex-shrink-0"><img data-prev alt="Vista previa" class="w-full h-full object-cover"></div>' +
+      '<div class="space-y-1 flex-grow"><label class="block text-[11px] font-bold text-espresso uppercase tracking-wider">Imagen del producto <span class="font-normal normal-case text-cafeTostado/70">(opcional)</span></label>' +
+      '<div class="flex flex-wrap items-center gap-3"><input type="file" data-file accept="image/png,image/jpeg,image/webp,image/gif" class="text-xs text-espresso file:mr-3 file:px-4 file:py-1.5 file:rounded-xl file:border file:border-borderBeige file:bg-cremaVainilla file:text-xs file:text-espresso file:cursor-pointer">' +
+      '<button type="button" data-quitar class="text-[11px] font-semibold text-[#B85C54] hover:underline" style="display:none">Quitar imagen</button></div></div>';
+    form.appendChild(fila);
+    var fileIn = fila.querySelector('[data-file]'), prev = fila.querySelector('[data-prev]'), quitar = fila.querySelector('[data-quitar]');
+    function imgDefecto() { return sel.value === 'Bebidas' ? 'frappe.jpeg' : 'marquesita.jpeg'; }
+    function pintarPrev(src, hayPropia) { prev.src = src || imgDefecto(); quitar.style.display = hayPropia ? '' : 'none'; }
+    function limpiarImg() { imgSel = undefined; fileIn.value = ''; pintarPrev(null, false); }
+    var editarImg = null; // imagen propia del producto que se está editando
+    sel.addEventListener('change', function () { if (!editarImg && typeof imgSel !== 'string') pintarPrev(null, false); });
+    pintarPrev(null, false);
+    fileIn.addEventListener('change', function () {
+      var f = fileIn.files && fileIn.files[0]; if (!f) return;
+      leerImagen(f, function (data, err) {
+        if (err) { fileIn.value = ''; return toast(err, false); }
+        imgSel = data; pintarPrev(data, true);
+      });
+    });
+    quitar.addEventListener('click', function () { imgSel = null; editarImg = null; fileIn.value = ''; pintarPrev(null, false); });
+
+    function claveNombre(t) { return sinAcentos(t).replace(/\s+/g, ' '); }
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      var nombre = ins[0].value.trim(), precio = parseFloat(ins[1].value.replace(/[^0-9.]/g, ''));
+      var nombre = ins[0].value.trim().replace(/\s+/g, ' '), precio = parseFloat(ins[1].value.replace(/[^0-9.]/g, ''));
       if (!nombre || !(precio > 0)) return toast('Escribe un nombre y un precio válido', false);
       var m = MenuStore.all();
-      if (editId) { m.forEach(function (x) { if (x.id === editId) { x.nombre = nombre; x.precio = precio; x.cat = sel.value; } }); toast('Producto actualizado'); editId = null; btnAdd.textContent = 'Agregar'; }
-      else { m.push({ id: 'x' + Date.now(), cat: sel.value, nombre: nombre, precio: precio, disp: true }); toast('Producto agregado'); }
-      MenuStore.save(m); cat = sel.value; ins[0].value = ''; ins[1].value = ''; pintarTabs(); render();
+      // no se permiten dos productos con el mismo nombre en la misma categoría
+      var dup = m.filter(function (x) { return x.cat === sel.value && x.id !== editId && claveNombre(x.nombre) === claveNombre(nombre); })[0];
+      if (dup) { alert('El producto "' + dup.nombre + '" ya está añadido en el menú (categoría ' + sel.value + ').'); ins[0].focus(); return; }
+      var accion;
+      if (editId) {
+        m.forEach(function (x) {
+          if (x.id !== editId) return;
+          x.nombre = nombre; x.precio = precio; x.cat = sel.value;
+          if (imgSel === null) delete x.img; else if (typeof imgSel === 'string') x.img = imgSel;
+        });
+        accion = 'Producto actualizado';
+      } else {
+        var nuevo = { id: 'x' + Date.now(), cat: sel.value, nombre: nombre, precio: precio, disp: true };
+        if (typeof imgSel === 'string') nuevo.img = imgSel;
+        m.push(nuevo); accion = 'Producto agregado';
+      }
+      if (!MenuStore.save(m)) return toast('No se pudo guardar (almacenamiento lleno). Prueba con una imagen más ligera.', false);
+      toast(accion); editId = null; editarImg = null; btnAdd.textContent = 'Agregar';
+      cat = sel.value; ins[0].value = ''; ins[1].value = ''; limpiarImg(); pintarTabs(); render();
     });
     cards.addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b) return; var m = MenuStore.all();
       if (b.dataset.tog) { m.forEach(function (x) { if (x.id === b.dataset.tog) x.disp = !x.disp; }); MenuStore.save(m); render(); }
       else if (b.dataset.del) { if (confirm('¿Eliminar este producto?')) { MenuStore.save(m.filter(function (x) { return x.id !== b.dataset.del; })); render(); } }
-      else if (b.dataset.edit) { var p = m.filter(function (x) { return x.id === b.dataset.edit; })[0]; ins[0].value = p.nombre; ins[1].value = p.precio; sel.value = p.cat; editId = p.id; btnAdd.textContent = 'Guardar'; ins[0].focus(); }
+      else if (b.dataset.edit) {
+        var p = m.filter(function (x) { return x.id === b.dataset.edit; })[0]; ins[0].value = p.nombre; ins[1].value = p.precio; sel.value = p.cat; editId = p.id; btnAdd.textContent = 'Guardar';
+        imgSel = undefined; fileIn.value = ''; editarImg = p.img || null; pintarPrev(p.img || null, !!p.img); ins[0].focus();
+      }
     });
     tabs.addEventListener('click', function (e) { var a = e.target.closest('a[data-c]'); if (!a) return; e.preventDefault(); cat = a.dataset.c; pintarTabs(); render(); });
     document.querySelector('input[placeholder="Buscar producto"]').addEventListener('input', function (e) { q = e.target.value.trim().toLowerCase(); render(); });
@@ -982,5 +1178,6 @@
     try { if (page && Pages[page.split(':')[0]]) Pages[page.split(':')[0]](page.split(':')[1]); } catch (e) { console.error('DSEA', page, e); }
     patchHeader();
     try { initBuscador(); } catch (e) { console.error('DSEA buscador', e); }
+    try { initNavCuenta(); } catch (e) { console.error('DSEA nav', e); }
   });
 })();

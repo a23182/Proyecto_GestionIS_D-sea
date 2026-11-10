@@ -36,3 +36,172 @@ body {
 img {
   object-fit: cover;
 }
+
+/* ==========================================================
+   Barra superior minimalista (enlaces de texto + iconos)
+   y drawer de acceso (Ingresar / Crear cuenta)
+   ========================================================== */
+
+/* Icono de línea fina (18px) */
+.dsea-ico { width: 18px; height: 18px; flex: none; display: block; }
+
+/* Enlace de texto sutil: subrayado que crece de izquierda a derecha */
+.dsea-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 2px;
+  font: 400 13px/1 var(--font-sans);
+  letter-spacing: .02em;
+  color: rgba(43, 33, 29, .72);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color .2s ease;
+}
+.dsea-link::after {
+  content: "";
+  position: absolute;
+  left: 2px; right: 2px; bottom: 2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform .25s ease;
+}
+.dsea-link:hover,
+.dsea-link:focus-visible { color: var(--espresso); }
+.dsea-link:hover::after,
+.dsea-link:focus-visible::after { transform: scaleX(1); }
+
+/* Botón de icono sin borde ni fondo (área táctil de 40px) */
+.dsea-icon-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; height: 40px;
+  color: rgba(43, 33, 29, .78);
+  background: none;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color .2s ease, background-color .2s ease;
+}
+.dsea-icon-btn:hover,
+.dsea-icon-btn:focus-visible { color: var(--espresso); background: rgba(228, 215, 202, .35); }
+
+/* Contador del carrito: punto pequeño sobre el icono */
+.dsea-badge {
+  position: absolute;
+  top: 4px; right: 2px;
+  min-width: 16px; height: 16px;
+  padding: 0 4px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font: 600 10px/1 var(--font-sans);
+  color: var(--crema-vainilla);
+  background: var(--espresso);
+  border-radius: 999px;
+}
+
+.dsea-link:focus-visible,
+.dsea-icon-btn:focus-visible,
+.dsea-auth button:focus-visible,
+.dsea-auth input:focus-visible { outline: 2px solid var(--caramelo); outline-offset: 2px; }
+
+/* ---------- Drawer de acceso ---------- */
+.dsea-auth {
+  position: fixed; inset: 0; z-index: 100;
+  visibility: hidden; pointer-events: none;
+  transition: visibility 0s linear .3s;
+}
+.dsea-auth.is-open { visibility: visible; pointer-events: auto; transition-delay: 0s; }
+
+.dsea-auth__backdrop {
+  position: absolute; inset: 0;
+  background: rgba(43, 33, 29, .35);
+  opacity: 0; transition: opacity .3s ease;
+}
+.dsea-auth.is-open .dsea-auth__backdrop { opacity: 1; }
+
+.dsea-auth__panel {
+  position: absolute; top: 0; right: 0;
+  width: min(420px, 100%); height: 100%;
+  display: flex; flex-direction: column;
+  padding: 24px 28px 32px;
+  overflow-y: auto;
+  background: var(--blanco-calido);
+  box-shadow: -12px 0 40px rgba(43, 33, 29, .12);
+  transform: translateX(100%);
+  transition: transform .3s cubic-bezier(.22, .61, .36, 1);
+}
+.dsea-auth.is-open .dsea-auth__panel { transform: none; }
+.dsea-auth__panel:focus { outline: none; }
+
+.dsea-auth__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.dsea-auth__title { font: 700 26px/1.2 var(--font-playfair); color: var(--espresso); }
+
+.dsea-auth__tabs { display: flex; gap: 24px; border-bottom: 1px solid var(--border-beige); margin-bottom: 24px; }
+.dsea-auth__tab {
+  padding: 8px 0; margin-bottom: -1px;
+  font: 500 14px/1 var(--font-sans);
+  color: rgba(105, 68, 48, .7);
+  background: none; border: 0; border-bottom: 2px solid transparent;
+  cursor: pointer; transition: color .2s ease, border-color .2s ease;
+}
+.dsea-auth__tab:hover { color: var(--espresso); }
+.dsea-auth__tab[aria-selected="true"] { color: var(--espresso); border-bottom-color: var(--espresso); }
+
+.dsea-auth form { display: flex; flex-direction: column; gap: 18px; }
+.dsea-auth form[hidden] { display: none; }
+
+.dsea-field { display: flex; flex-direction: column; gap: 4px; }
+.dsea-field > span { font: 500 12px/1 var(--font-sans); color: rgba(105, 68, 48, .85); }
+.dsea-field input {
+  width: 100%; padding: 8px 0;
+  font: 400 15px/1.3 var(--font-sans); color: var(--espresso);
+  background: transparent;
+  border: 0; border-bottom: 1px solid var(--border-beige); border-radius: 0;
+  transition: border-color .2s ease;
+}
+.dsea-field input::placeholder { color: rgba(105, 68, 48, .4); }
+.dsea-field input:hover { border-bottom-color: rgba(105, 68, 48, .5); }
+.dsea-field input:focus { outline: none; border-bottom-color: var(--espresso); }
+
+.dsea-cta {
+  margin-top: 6px; padding: 12px 20px;
+  font: 500 14px/1 var(--font-sans); color: var(--crema-vainilla);
+  background: var(--espresso); border: 0; border-radius: 999px;
+  cursor: pointer; transition: background-color .2s ease;
+}
+.dsea-cta:hover { background: var(--cafe-tostado); }
+.dsea-cta:disabled { opacity: .6; cursor: default; }
+
+.dsea-err { margin: 0; font: 600 12px/1.4 var(--font-sans); color: #B85C54; }
+.dsea-err[hidden] { display: none; }
+.dsea-hint { margin: 0; font: 400 11px/1.5 var(--font-sans); color: rgba(105, 68, 48, .7); text-align: center; }
+.dsea-auth form .dsea-link { align-self: center; }
+
+body.dsea-auth-open { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dsea-link::after, .dsea-auth, .dsea-auth__backdrop, .dsea-auth__panel { transition: none; }
+}
+
+/* Visibilidad responsive propia (no depende del orden de carga de Tailwind) */
+.dsea-desk { display: none !important; }
+.dsea-mob  { display: inline-flex !important; }
+@media (min-width: 640px) {
+  .dsea-desk { display: inline-flex !important; }
+  .dsea-mob  { display: none !important; }
+}
+
+.dsea-auth__foot {
+  margin-top: auto; padding-top: 24px;
+  display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  border-top: 1px solid var(--border-beige);
+}
+.dsea-auth__foot .dsea-link { font-size: 12px; }

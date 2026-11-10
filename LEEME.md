@@ -1,4 +1,4 @@
-# D'SEA – simulación  (solo HTML + JS + localStorage)
+# D'SEA – simulación front-end (solo HTML + JS + localStorage)
 
 Abre `Usuario/inicio.html` (o `Administrador/iniciosesionadmin.html`). Recomendado: Chrome o Edge.
 Si usas otro navegador y algo no se guarda, sirve la carpeta con `python -m http.server` o Live Server.
@@ -30,3 +30,10 @@ El cliente ve el cambio de estado en su seguimiento en ~2 s (abre ambos en pesta
 - Lupa del encabezado: busca productos por nombre (sin importar acentos ni mayúsculas); desde otras páginas lleva al menú con el resultado.
 - Productos nuevos creados por el admin se agregan al carrito directo desde el menú (sin personalización).
 - Si el admin cambia el precio base de Frappe/Smoothie/Chocomil, el cambio se aplica a todos sus sabores.
+- Registro / crear cuenta: la contraseña debe tener entre 4 y 128 caracteres.
+- Administración del menú: no deja agregar (ni renombrar a) un producto con el mismo nombre en la misma categoría (ignora mayúsculas, acentos y espacios) y muestra una alerta.
+- Administración del menú: se puede subir imagen al agregar o editar un producto (PNG/JPG/WEBP/GIF; se reduce a 600 px y se guarda en el navegador) y quitarla para volver a la imagen por defecto. Se ve en el menú, el detalle y el carrito.
+- Barra superior rediseñada (minimalista): enlaces de texto sutiles (Ingresar / Crear cuenta) + iconos de línea (buscar, carrito con contador). Sin botones de bloque.
+- Ingresar / Crear cuenta ya no cambian de página: abren un panel lateral (drawer) con pestañas, validación y mensajes de error. Esc, clic en el fondo o la X lo cierran; el foco queda atrapado dentro mientras está abierto. Sin JavaScript los enlaces siguen llevando a iniciosesion.html / registro.html.
+- En páginas públicas (inicio, menú, detalles, carrito) iniciar y cerrar sesión se refleja en la barra sin recargar. Si se inicia sesión desde el pago, continúa a "Método de pago"; si la cuenta es de administrador, va al panel de administración.
+- Para ajustar el aspecto de la barra y del drawer: clases `.dsea-link`, `.dsea-icon-btn`, `.dsea-badge` y `.dsea-auth*` al final de Usuario/styles.css. La lógica está en dsea.js (`navCuenta` y `Drawer`; recuerda copiar dsea.js a las 3 ubicaciones).

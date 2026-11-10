@@ -64,13 +64,27 @@
                 </a>
             </div>
 
-            <!-- Botones de acción a la derecha -->
-            <div class="flex items-center space-x-3">
-                <a href="iniciosesion.html" class="px-5 py-1.5 rounded-full border border-espresso text-espresso text-sm font-medium hover:bg-espresso hover:text-cremaVainilla transition-all duration-200 inline-block text-center">
-                    Ingresar
-                </a>
-                <a href="registro.html" class="px-5 py-1.5 rounded-full bg-espresso text-cremaVainilla text-sm font-medium hover:bg-cafeTostado transition-all duration-200 shadow-sm inline-block text-center">
-                    Únete
+            <!-- Acciones: buscar · cuenta · carrito (enlaces de texto + iconos de línea) -->
+            <div class="flex items-center gap-0.5 sm:gap-2" data-nav-actions>
+
+                <!-- Buscar (dsea.js despliega la barra de búsqueda) -->
+                <button type="button" class="dsea-icon-btn" title="Buscar" aria-label="Buscar">
+                    <svg class="dsea-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                </button>
+
+                <!-- Cuenta. Sin JS son enlaces normales; con JS abren el drawer de acceso -->
+                <div class="flex items-center gap-1 sm:gap-5" data-nav-account>
+                    <a href="iniciosesion.html" data-auth-open="login" class="dsea-link dsea-desk">Ingresar</a>
+                    <a href="registro.html" data-auth-open="register" class="dsea-link dsea-desk">Crear cuenta</a>
+                    <a href="iniciosesion.html" data-auth-open="login" class="dsea-icon-btn dsea-mob" aria-label="Ingresar" title="Ingresar">
+                        <svg class="dsea-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                    </a>
+                </div>
+
+                <!-- Carrito con contador (dsea.js actualiza el número) -->
+                <a href="carritodecompras.html" class="dsea-icon-btn" title="Ver carrito" aria-label="Ver carrito">
+                    <svg class="dsea-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+                    <span class="dsea-badge" style="display:none">0</span>
                 </a>
             </div>
         </div>
